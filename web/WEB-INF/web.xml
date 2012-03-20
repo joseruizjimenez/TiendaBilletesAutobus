@@ -15,7 +15,7 @@
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
     
-    <!--Fichero con los datos de la cuenta de administrador>
+    <!--Fichero con los datos de la cuenta de administrador >
     <context-param>
         <param-name>adminConfigFile</param-name>
         <param-value>/WEB-INF/configFiles/adminConfig.prop</param-value>
