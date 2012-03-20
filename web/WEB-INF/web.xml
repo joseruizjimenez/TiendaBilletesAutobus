@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!--FrontController recibe todas las peticiones destinadas a un Servlet-->
+    <servlet-mapping>
+        <servlet-name>FrontController</servlet-name>
+        <url-pattern>/go</url-pattern>
+    </servlet-mapping>
+    
+    <!--Configuracion del pool de conexiones del servidor-->
+    <resource-ref>
+        <res-ref-name>jdbc/tiendaonline</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    
+    <!--Fichero con los datos de la cuenta de administrador>
+    <context-param>
+        <param-name>adminConfigFile</param-name>
+        <param-value>/WEB-INF/configFiles/adminConfig.prop</param-value>
+    </context-param -->
+
+    <!--Fichero con los datos del servidor para mandar los emails-->
+    <context-param>
+        <param-name>emailConfigFile</param-name>
+        <param-value>/WEB-INF/configFiles/emailConfig.prop</param-value>
+    </context-param>
+    <!--Fichero con la politica de prevencion de XSS-->
+    <context-param>
+        <param-name>xssPolicyConfigFile</param-name>
+        <param-value>/WEB-INF/configFiles/antisamy-slashdot-1.4.3.xml</param-value>
+    </context-param>
+    
+    <!--Parametros del contexto para configurar la aplicacion-->    
+    <!--Fichero para configurar la persistencia de la aplicacion, que puede ser:
+         pool: usa el pool de persistencia (ha de estar configurado el servidor de aplicaciones)
+         jdbc: usa JDBC directamente; es necesario especificar la URL de la base de datos, el driver el usuario y el password
+         file: se empleara un sistema de ficheros para persistir la aplicacion-->   
+    <context-param>
+        <param-name>persistenceConfigFile</param-name>
+        <param-value>/WEB-INF/configFiles/persistenceConfig.prop</param-value>
+    </context-param>    
+    <context-param>
+        <param-name>persistenceMechanism</param-name>
+        <param-value>pool</param-value>
+    </context-param>
+    <!--Si falla el persistenceConfigFile se emplea esta configuracion:
+        Configuracion de la base de datos jdbc:mysql://localhost:3306/tiendaonline-->
+    <context-param>
+        <param-name>databaseURL</param-name>
+        <param-value>jdbc:mysql://localhost:3306/tiendaonline</param-value>
+    </context-param>
+    <context-param>
+        <param-name>databaseDriver</param-name>
+        <param-value>com.mysql.jdbc.Driver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>databaseUser</param-name>
+        <param-value>userlpi</param-value>
+    </context-param>
+    <context-param>
+        <param-name>databasePassword</param-name>
+        <param-value>passlpi</param-value>
+    </context-param>
+    
+    <!--Listado de categorias del panel lateral izquierdo de la web
+        Seran presentadas como enlaces de busqueda a esa categoria: Categoria=type>
+    <context-param>
+        <param-name>categories</param-name>
+        <param-value>Rock=rock,POP=pop,Jazz=jazz,R &amp; B=rb,Clasica=classic,Folk=folk,Chill-Out=chillout,Electronica=electronica,Avant-Garde=avantgarde</param-value>
+    </context-param-->
+    
+    <!--Recursos estaticos y JSPs de la aplicacion-->
+    <!--Accesibles sin credenciales-->
+    <context-param>
+        <param-name>frontPage</param-name>
+        <param-value>/index.jsp</param-value>
+    </context-param>
+    <!--context-param>
+        <param-name>userLogin</param-name>
+        <param-value>/WEB-INF/view/public/userLogin.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userForm</param-name>
+        <param-value>/WEB-INF/view/public/userForm.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userDeleted</param-name>
+        <param-value>/WEB-INF/view/public/userDeleted.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>shoppingCart</param-name>
+        <param-value>/WEB-INF/view/public/shoppingCart.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketInfo</param-name>
+        <param-value>/WEB-INF/view/public/ticketInfo.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketSearch</param-name>
+        <param-value>/WEB-INF/view/public/ticketSearch.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>checkoutLogin</param-name>
+        <param-value>/WEB-INF/view/public/checkoutLogin.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>checkoutSuccess</param-name>
+        <param-value>/WEB-INF/view/public/checkoutSuccess.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>checkoutError</param-name>
+        <param-value>/WEB-INF/view/public/checkoutError.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>newRecords</param-name>
+        <param-value>/WEB-INF/view/public/newRecords.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>featuredRecords</param-name>
+        <param-value>/WEB-INF/view/public/featuredRecords.jsp</param-value>
+    </context-param-->
+
+    <!--Accesibles solo con credenciales de cliente logueado-->
+    <!--context-param>
+        <param-name>userUpdate</param-name>
+        <param-value>/WEB-INF/view/private/userUpdate.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userSettings</param-name>
+        <param-value>/WEB-INF/view/private/userSettings.jsp</param-value>
+    </context-param-->
+
+    <!--Accesibles solo con credenciales de administrador-->
+    <!--context-param>
+        <param-name>adminLogin</param-name>
+        <param-value>/WEB-INF/view/public/adminLogin.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminRecordForm</param-name>
+        <param-value>/WEB-INF/view/admin/adminRecordForm.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminRecordUpdate</param-name>
+        <param-value>/WEB-INF/view/admin/adminRecordUpdate.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminSalesSearch</param-name>
+        <param-value>/WEB-INF/view/admin/adminSalesSearch.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminUserSearch</param-name>
+        <param-value>/WEB-INF/view/admin/adminUserSearch.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminSettings</param-name>
+        <param-value>/WEB-INF/view/admin/adminSettings.jsp</param-value>
+    </context-param-->
+    
+    <!--Recurso para referenciar una Solicitud incorrecta o error-->
+    <context-param>
+        <param-name>errorForm</param-name>
+        <param-value>/WEB-INF/400error.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>exceptionError</param-name>
+        <param-value>/WEB-INF/500error.jsp</param-value>
+    </context-param>
+      
+    <!--Parametros de contexto de los Servlets de la aplicacion-->
+    <context-param>
+        <param-name>frontController</param-name>
+        <param-value>FrontController</param-value>
+    </context-param>
+    <!--context-param>
+        <param-name>userLoginServlet</param-name>
+        <param-value>UserLoginServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userLogoutServlet</param-name>
+        <param-value>UserLogoutServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userCreateServlet</param-name>
+        <param-value>UserCreateServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userUpdateServlet</param-name>
+        <param-value>UserUpdateServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userDeleteServlet</param-name>
+        <param-value>UserDeleteServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>userSearchServlet</param-name>
+        <param-value>UserSearchServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>shoppingCartServlet</param-name>
+        <param-value>ShoppingCartServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>checkoutCartServlet</param-name>
+        <param-value>CheckoutCartServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminLoginServlet</param-name>
+        <param-value>AdminLoginServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>adminLogoutServlet</param-name>
+        <param-value>AdminLogoutServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>recordInfoServlet</param-name>
+        <param-value>RecordInfoServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>recordCreateServlet</param-name>
+        <param-value>RecordCreateServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>recordUpdateServlet</param-name>
+        <param-value>RecordUpdateServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>recordDeleteServlet</param-name>
+        <param-value>RecordDeleteServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>recordSearchServlet</param-name>
+        <param-value>RecordSearchServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>commentCreateServlet</param-name>
+        <param-value>CommentCreateServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>commentDeleteServlet</param-name>
+        <param-value>CommentDeleteServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>salesSearchServlet</param-name>
+        <param-value>SalesSearchServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mailSaleServlet</param-name>
+        <param-value>MailSaleServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mailUserServlet</param-name>
+        <param-value>MailUserServlet</param-value>
+    </context-param-->
+    
+    <!--Servlets de la aplicacion-->
+    <servlet>
+        <servlet-name>FrontController</servlet-name>
+        <servlet-class>controller.FrontController</servlet-class>
+    </servlet>
+    <!--servlet>
+        <servlet-name>UserLoginServlet</servlet-name>
+        <servlet-class>controller.publico.UserLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserLogoutServlet</servlet-name>
+        <servlet-class>controller.privado.UserLogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserCreateServlet</servlet-name>
+        <servlet-class>controller.publico.UserCreateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserUpdateServlet</servlet-name>
+        <servlet-class>controller.privado.UserUpdateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserDeleteServlet</servlet-name>
+        <servlet-class>controller.privado.UserDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserSearchServlet</servlet-name>
+        <servlet-class>controller.admin.UserSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShoppingCartServlet</servlet-name>
+        <servlet-class>controller.publico.ShoppingCartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckoutCartServlet</servlet-name>
+        <servlet-class>controller.publico.CheckoutCartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <servlet-class>controller.publico.AdminLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminLogoutServlet</servlet-name>
+        <servlet-class>controller.admin.AdminLogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordInfoServlet</servlet-name>
+        <servlet-class>controller.publico.RecordInfoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordCreateServlet</servlet-name>
+        <servlet-class>controller.admin.RecordCreateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordUpdateServlet</servlet-name>
+        <servlet-class>controller.admin.RecordUpdateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordDeleteServlet</servlet-name>
+        <servlet-class>controller.admin.RecordDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordSearchServlet</servlet-name>
+        <servlet-class>controller.publico.RecordSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CommentCreateServlet</servlet-name>
+        <servlet-class>controller.privado.CommentCreateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CommentDeleteServlet</servlet-name>
+        <servlet-class>controller.privado.CommentDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SalesSearchServlet</servlet-name>
+        <servlet-class>controller.admin.SalesSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MailSaleServlet</servlet-name>
+        <servlet-class>controller.privado.MailSaleServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MailUserServlet</servlet-name>
+        <servlet-class>controller.privado.MailUserServlet</servlet-class>
+    </servlet-->
+
+    <servlet>
+        <servlet-name>ManageExceptionServlet</servlet-name>
+        <servlet-class>controller.ManageExceptionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManageExceptionServlet</servlet-name>
+        <url-pattern>/Ooops</url-pattern>
+    </servlet-mapping>
+    
+    <!--Listeners de inicializacion y sesion-->
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>controller.StartUpListener</listener-class>
+    </listener>
+    <!--listener>
+        <description>SessionListener</description>
+        <listener-class>controller.SessionListener</listener-class>
+    </listener-->
+    
+    <!--Filtros de la aplicacion>
+    <filter>
+        <filter-name>CheckCartFilter</filter-name>
+        <filter-class>controller.filter.CheckCartFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CheckCartFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping-->
+    
+    <!--Recursos para errores http 404, 500 y gestion de Excepciones-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/404error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/500error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/Ooops</location>
+    </error-page> 
+    
+    <!--Timeout de la sesion y fichero de bienvenida-->
+    <session-config>
+        <session-timeout>
+            20
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

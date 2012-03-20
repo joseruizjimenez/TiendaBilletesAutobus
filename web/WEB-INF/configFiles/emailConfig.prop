@@ -1,0 +1,7 @@
+mail.smtp.host = smtp.gmail.com
+mail.smtp.starttls.enable = true
+mail.smtp.port = 25
+mail.smtp.user = tiendaonlinelpi@gmail.com
+mail.smtp.auth = true
+mail.smtp.localhost = localhost
+password = passtiendaonlinelpi

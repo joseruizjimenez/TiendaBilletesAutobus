@@ -1,0 +1,4 @@
+url = jdbc:mysql://localhost:3306/tiendaonline
+driver = com.mysql.jdbc.Driver
+user = userlpi
+password = passlpi
