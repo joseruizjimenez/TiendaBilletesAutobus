@@ -15,7 +15,7 @@
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
     
-    <!--Fichero con los datos de la cuenta de administrador >
+    <!--Fichero con los datos de la cuenta de administrador>
     <context-param>
         <param-name>adminConfigFile</param-name>
         <param-value>/WEB-INF/configFiles/adminConfig.prop</param-value>
@@ -77,86 +77,91 @@
         <param-name>frontPage</param-name>
         <param-value>/index.jsp</param-value>
     </context-param>
-    <!--context-param>
-        <param-name>userLogin</param-name>
-        <param-value>/WEB-INF/view/public/userLogin.jsp</param-value>
-    </context-param>
     <context-param>
-        <param-name>userForm</param-name>
-        <param-value>/WEB-INF/view/public/userForm.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>userDeleted</param-name>
-        <param-value>/WEB-INF/view/public/userDeleted.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>shoppingCart</param-name>
-        <param-value>/WEB-INF/view/public/shoppingCart.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>ticketInfo</param-name>
-        <param-value>/WEB-INF/view/public/ticketInfo.jsp</param-value>
+        <param-name>ticketSearchForm</param-name>
+        <param-value>/WEB-INF/view/public/ticketSearchForm.jsp</param-value>
     </context-param>
     <context-param>
         <param-name>ticketSearch</param-name>
         <param-value>/WEB-INF/view/public/ticketSearch.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>checkoutLogin</param-name>
-        <param-value>/WEB-INF/view/public/checkoutLogin.jsp</param-value>
+        <param-name>ticketSelectionSearch</param-name>
+        <param-value>/WEB-INF/view/public/ticketSelectionSearch.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>checkoutSuccess</param-name>
-        <param-value>/WEB-INF/view/public/checkoutSuccess.jsp</param-value>
+        <param-name>ticketSelectionForm</param-name>
+        <param-value>/WEB-INF/view/public/ticketSelectionForm.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>checkoutError</param-name>
-        <param-value>/WEB-INF/view/public/checkoutError.jsp</param-value>
+        <param-name>ticketSitForm</param-name>
+        <param-value>/WEB-INF/view/public/ticketSitForm.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>newRecords</param-name>
-        <param-value>/WEB-INF/view/public/newRecords.jsp</param-value>
+        <param-name>ticketSelectionInfo</param-name>
+        <param-value>/WEB-INF/view/public/ticketSelectionInfo.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>featuredRecords</param-name>
-        <param-value>/WEB-INF/view/public/featuredRecords.jsp</param-value>
-    </context-param-->
+        <param-name>ticketCheckoutForm</param-name>
+        <param-value>/WEB-INF/view/public/ticketCheckoutForm.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketCheckoutError</param-name>
+        <param-value>/WEB-INF/view/public/ticketCheckoutError.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketCheckoutOK</param-name>
+        <param-value>/WEB-INF/view/public/ticketCheckoutOK.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpSearch</param-name>
+        <param-value>/WEB-INF/view/public/ticketOpSearch.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpSearchList</param-name>
+        <param-value>/WEB-INF/view/public/ticketOpSearchList.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpSearchError</param-name>
+        <param-value>/WEB-INF/view/public/ticketOpSearchError.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>clubBusCreateForm</param-name>
+        <param-value>/WEB-INF/view/public/clubBusCreateForm.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>clubBusCreateOK</param-name>
+        <param-value>/WEB-INF/view/public/clubBusCreateOK.jsp</param-value>
+    </context-param>
 
-    <!--Accesibles solo con credenciales de cliente logueado-->
-    <!--context-param>
-        <param-name>userUpdate</param-name>
-        <param-value>/WEB-INF/view/private/userUpdate.jsp</param-value>
+    <!--Accesibles solo acreditando ser comprador del billete-->
+    <context-param>
+        <param-name>ticketOpMenu</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpMenu.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>userSettings</param-name>
-        <param-value>/WEB-INF/view/private/userSettings.jsp</param-value>
-    </context-param-->
+        <param-name>ticketOpInfo</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpInfo.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpCancel</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpCancel.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpCancelOK</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpCancelOK.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpChange</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpChange.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpChangeOK</param-name>
+        <param-value>/WEB-INF/view/private/ticketOpChangeOK.jsp</param-value>
+    </context-param>
 
     <!--Accesibles solo con credenciales de administrador-->
-    <!--context-param>
-        <param-name>adminLogin</param-name>
-        <param-value>/WEB-INF/view/public/adminLogin.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminRecordForm</param-name>
-        <param-value>/WEB-INF/view/admin/adminRecordForm.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminRecordUpdate</param-name>
-        <param-value>/WEB-INF/view/admin/adminRecordUpdate.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminSalesSearch</param-name>
-        <param-value>/WEB-INF/view/admin/adminSalesSearch.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminUserSearch</param-name>
-        <param-value>/WEB-INF/view/admin/adminUserSearch.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminSettings</param-name>
-        <param-value>/WEB-INF/view/admin/adminSettings.jsp</param-value>
-    </context-param-->
+    
     
     <!--Recurso para referenciar una Solicitud incorrecta o error-->
     <context-param>
@@ -173,93 +178,25 @@
         <param-name>frontController</param-name>
         <param-value>FrontController</param-value>
     </context-param>
-    <!--context-param>
-        <param-name>userLoginServlet</param-name>
-        <param-value>UserLoginServlet</param-value>
+    <context-param>
+        <param-name>frontController</param-name>
+        <param-value>FrontController</param-value>
     </context-param>
     <context-param>
-        <param-name>userLogoutServlet</param-name>
-        <param-value>UserLogoutServlet</param-value>
+        <param-name>frontController</param-name>
+        <param-value>FrontController</param-value>
     </context-param>
     <context-param>
-        <param-name>userCreateServlet</param-name>
-        <param-value>UserCreateServlet</param-value>
+        <param-name>frontController</param-name>
+        <param-value>FrontController</param-value>
     </context-param>
-    <context-param>
-        <param-name>userUpdateServlet</param-name>
-        <param-value>UserUpdateServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>userDeleteServlet</param-name>
-        <param-value>UserDeleteServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>userSearchServlet</param-name>
-        <param-value>UserSearchServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>shoppingCartServlet</param-name>
-        <param-value>ShoppingCartServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>checkoutCartServlet</param-name>
-        <param-value>CheckoutCartServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminLoginServlet</param-name>
-        <param-value>AdminLoginServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>adminLogoutServlet</param-name>
-        <param-value>AdminLogoutServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>recordInfoServlet</param-name>
-        <param-value>RecordInfoServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>recordCreateServlet</param-name>
-        <param-value>RecordCreateServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>recordUpdateServlet</param-name>
-        <param-value>RecordUpdateServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>recordDeleteServlet</param-name>
-        <param-value>RecordDeleteServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>recordSearchServlet</param-name>
-        <param-value>RecordSearchServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>commentCreateServlet</param-name>
-        <param-value>CommentCreateServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>commentDeleteServlet</param-name>
-        <param-value>CommentDeleteServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>salesSearchServlet</param-name>
-        <param-value>SalesSearchServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>mailSaleServlet</param-name>
-        <param-value>MailSaleServlet</param-value>
-    </context-param>
-    <context-param>
-        <param-name>mailUserServlet</param-name>
-        <param-value>MailUserServlet</param-value>
-    </context-param-->
     
     <!--Servlets de la aplicacion-->
     <servlet>
         <servlet-name>FrontController</servlet-name>
         <servlet-class>controller.FrontController</servlet-class>
     </servlet>
-    <!--servlet>
+    <servlet>
         <servlet-name>UserLoginServlet</servlet-name>
         <servlet-class>controller.publico.UserLoginServlet</servlet-class>
     </servlet>
@@ -267,78 +204,6 @@
         <servlet-name>UserLogoutServlet</servlet-name>
         <servlet-class>controller.privado.UserLogoutServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>UserCreateServlet</servlet-name>
-        <servlet-class>controller.publico.UserCreateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>controller.privado.UserUpdateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UserDeleteServlet</servlet-name>
-        <servlet-class>controller.privado.UserDeleteServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UserSearchServlet</servlet-name>
-        <servlet-class>controller.admin.UserSearchServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ShoppingCartServlet</servlet-name>
-        <servlet-class>controller.publico.ShoppingCartServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CheckoutCartServlet</servlet-name>
-        <servlet-class>controller.publico.CheckoutCartServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AdminLoginServlet</servlet-name>
-        <servlet-class>controller.publico.AdminLoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AdminLogoutServlet</servlet-name>
-        <servlet-class>controller.admin.AdminLogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordInfoServlet</servlet-name>
-        <servlet-class>controller.publico.RecordInfoServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordCreateServlet</servlet-name>
-        <servlet-class>controller.admin.RecordCreateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordUpdateServlet</servlet-name>
-        <servlet-class>controller.admin.RecordUpdateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordDeleteServlet</servlet-name>
-        <servlet-class>controller.admin.RecordDeleteServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordSearchServlet</servlet-name>
-        <servlet-class>controller.publico.RecordSearchServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CommentCreateServlet</servlet-name>
-        <servlet-class>controller.privado.CommentCreateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CommentDeleteServlet</servlet-name>
-        <servlet-class>controller.privado.CommentDeleteServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SalesSearchServlet</servlet-name>
-        <servlet-class>controller.admin.SalesSearchServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>MailSaleServlet</servlet-name>
-        <servlet-class>controller.privado.MailSaleServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>MailUserServlet</servlet-name>
-        <servlet-class>controller.privado.MailUserServlet</servlet-class>
-    </servlet-->
 
     <servlet>
         <servlet-name>ManageExceptionServlet</servlet-name>
