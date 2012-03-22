@@ -126,6 +126,14 @@
         <param-value>/WEB-INF/view/public/ticketOpSearchError.jsp</param-value>
     </context-param>
     <context-param>
+        <param-name>ticketOpCancelOK</param-name>
+        <param-value>/WEB-INF/view/public/ticketOpCancelOK.jsp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpChangeOK</param-name>
+        <param-value>/WEB-INF/view/public/ticketOpChangeOK.jsp</param-value>
+    </context-param>
+    <context-param>
         <param-name>clubBusCreateForm</param-name>
         <param-value>/WEB-INF/view/public/clubBusCreateForm.jsp</param-value>
     </context-param>
@@ -148,16 +156,8 @@
         <param-value>/WEB-INF/view/private/ticketOpCancel.jsp</param-value>
     </context-param>
     <context-param>
-        <param-name>ticketOpCancelOK</param-name>
-        <param-value>/WEB-INF/view/private/ticketOpCancelOK.jsp</param-value>
-    </context-param>
-    <context-param>
         <param-name>ticketOpChange</param-name>
         <param-value>/WEB-INF/view/private/ticketOpChange.jsp</param-value>
-    </context-param>
-    <context-param>
-        <param-name>ticketOpChangeOK</param-name>
-        <param-value>/WEB-INF/view/private/ticketOpChangeOK.jsp</param-value>
     </context-param>
 
     <!--Accesibles solo con credenciales de administrador-->
@@ -179,16 +179,36 @@
         <param-value>FrontController</param-value>
     </context-param>
     <context-param>
-        <param-name>frontController</param-name>
-        <param-value>FrontController</param-value>
+        <param-name>ticketSearchServlet</param-name>
+        <param-value>TicketSearchServlet</param-value>
     </context-param>
     <context-param>
-        <param-name>frontController</param-name>
-        <param-value>FrontController</param-value>
+        <param-name>ticketSelectionServlet</param-name>
+        <param-value>TicketSelectionServlet</param-value>
     </context-param>
     <context-param>
-        <param-name>frontController</param-name>
-        <param-value>FrontController</param-value>
+        <param-name>ticketSitServlet</param-name>
+        <param-value>TicketSitServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketCheckoutServlet</param-name>
+        <param-value>TicketCheckoutServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpSearchServlet</param-name>
+        <param-value>TicketOpSearchServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpCancelServlet</param-name>
+        <param-value>TicketOpCancelServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpChangeSelectionServlet</param-name>
+        <param-value>TicketOpChangeSelectionServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpChangeServlet</param-name>
+        <param-value>TicketOpChangeServlet</param-value>
     </context-param>
     
     <!--Servlets de la aplicacion-->
@@ -197,12 +217,36 @@
         <servlet-class>controller.FrontController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>UserLoginServlet</servlet-name>
-        <servlet-class>controller.publico.UserLoginServlet</servlet-class>
+        <servlet-name>TicketSearchServlet</servlet-name>
+        <servlet-class>controller.public.TicketSearchServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>UserLogoutServlet</servlet-name>
-        <servlet-class>controller.privado.UserLogoutServlet</servlet-class>
+        <servlet-name>TicketSelectionServlet</servlet-name>
+        <servlet-class>controller.public.TicketSelectionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketSitServlet</servlet-name>
+        <servlet-class>controller.private.TicketSitServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketCheckoutServlet</servlet-name>
+        <servlet-class>controller.private.TicketCheckoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketOpSearchServlet</servlet-name>
+        <servlet-class>controller.private.TicketOpSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketOpCancelServlet</servlet-name>
+        <servlet-class>controller.private.TicketOpCancelServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketOpChangeSelectionServlet</servlet-name>
+        <servlet-class>controller.private.TicketOpChangeSelectionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketOpChangeServlet</servlet-name>
+        <servlet-class>controller.private.TicketOpChangeServlet</servlet-class>
     </servlet>
 
     <servlet>

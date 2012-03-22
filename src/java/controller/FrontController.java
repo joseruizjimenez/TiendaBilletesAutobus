@@ -26,122 +26,50 @@ public class FrontController extends BasicUtilitiesServlet {
             Logger.getLogger(FrontController.class.getName()).error(
                     "No se pudo establecer el encoding", ex);
         }
-        String to = request.getParameter("to");
         HttpSession session = request.getSession();
-        String authenticated = (String) session.getAttribute("authenticated");
-        String admin = (String) session.getAttribute("admin");
+        String to = request.getParameter("to");
         if (to == null || (persistenceMechanism != null
                 && persistenceMechanism.equals("none"))) {
             gotoURL(errorForm, request, response);
-        } else if(to.equals("product")) {
-            gotoNamedResource(recordInfoServlet,request,response);
-        } else if(to.equals("search")) {
-            if(request.getParameter("type")==null && request.getParameter("artist")==null
-                    && request.getParameter("recordLabel")==null) {
-                gotoURL(recordSearch,request,response);
+        } else if(to.equals("busqueda")) {
+            if(request.getParameter("origen") == null ) {
+                gotoURL(ticketSearchForm, request, response);
             } else {
-                gotoNamedResource(recordSearchServlet,request,response);
-            }
-        } else if(to.equals("featured")) {
-            gotoURL(featuredRecords,request,response);
-        } else if(to.equals("new")) {
-            gotoURL(newRecords,request,response);
-        } else if(to.equals("login")) {
-            gotoURL(userLogin,request,response);
-        } else if(to.equals("shoppingcart")) {
-            if(request.getParameter("id")==null) {
-                gotoURL(shoppingCart,request,response);
-            } else {
-                gotoNamedResource(shoppingCartServlet,request,response);
-            }
-        } else if(to.equals("checkout")) {
-            if(request.getParameter("action")==null) {
-                gotoURL(checkoutLogin,request,response);
-            } else {
-                gotoNamedResource(checkoutCartServlet,request,response);
-            }
-        } else if(to.equals("user")) {
-            if("false".equals(authenticated)) {
-                if(request.getParameter("user")==null) {
-                    gotoURL(userLogin,request,response);
-                } else {
-                    gotoNamedResource(userLoginServlet,request,response);
-                }
-            } else if("true".equals(authenticated)) {
-                String action = request.getParameter("action");
-                if(action == null) {
-                    gotoURL(userSettings,request,response);
-                } else if("delete".equals(action)) {
-                    gotoNamedResource(userDeleteServlet,request,response);
-                } else if("update".equals(action)) {
-                    if(request.getParameter("nick")==null) {
-                        gotoURL(userUpdate,request,response);
-                    } else {
-                        gotoNamedResource(userUpdateServlet,request,response);
-                    }
-                }
-            }
-        } else if(to.equals("register") && "false".equals(authenticated)) {
-            if(request.getParameter("nick")==null) {
-                gotoURL(userForm,request,response);
-            } else {
-                gotoNamedResource(userCreateServlet,request,response);
-            }
-        } else if(to.equals("logout")) {
-            gotoNamedResource(userLogoutServlet,request,response);
-        } else if(to.equals("comment") && "true".equals(authenticated)) {
-            String action = request.getParameter("action");
-            if("new".equals(action)) {
-                gotoNamedResource(commentCreateServlet,request,response);
-            } else if("delete".equals(action)) {
-                gotoNamedResource(commentDeleteServlet,request,response);
-            }
-        } else if(to.equals("mailuser")) {
-            gotoNamedResource(mailUserServlet,request,response);
-        } else if(to.equals("mailsale")) {
-            gotoNamedResource(mailSaleServlet,request,response);
-        } else if(to.equals("admin")) {
-            if("false".equals(admin)) {
-                if(request.getParameter("user")==null) {
-                    gotoURL(adminLogin,request,response);
-                } else {
-                    gotoNamedResource(adminLoginServlet,request,response);
-                }
-            } else if("true".equals(admin)) {
-                String action = request.getParameter("action");
-                if(action == null) {
-                    gotoURL(adminSettings,request,response);
-                } else if("newrecord".equals(action)) {
-                    if(request.getParameter("name")==null) {
-                        gotoURL(adminRecordForm,request,response);
-                    } else {
-                        gotoNamedResource(recordCreateServlet,request,response);
-                    }
-                } else if("updaterecord".equals(action)) {
-                    if(request.getParameter("name")==null) {
-                        request.setAttribute("id",request.getParameter("id"));
-                        gotoURL(adminRecordUpdate,request,response);
-                    } else {
-                        gotoNamedResource(recordUpdateServlet,request,response);
-                    }
-                } else if("deleterecord".equals(action)) {
-                    gotoNamedResource(recordDeleteServlet,request,response);
-                } else if("searchuser".equals(action)) {
-                    if(request.getParameter("nick")==null) {
-                        gotoURL(adminUserSearch,request,response);
-                    } else {
-                        gotoNamedResource(userSearchServlet,request,response);
-                    }
-                } else if("searchsale".equals(action)) {
-                    if(request.getParameter("id")==null) {
-                        gotoURL(adminSalesSearch,request,response);
-                    } else {
-                        gotoNamedResource(salesSearchServlet,request,response);
-                    }
-                } else if("logout".equals(action)) {
-                    gotoNamedResource(adminLogoutServlet,request,response);
-                }
-            }      
+                gotoNamedResource(ticketSearchServlet, request, response);
+            }            
+        } else if(to.equals("seleccion")) {
+            gotoNamedResource(ticketSelectionServlet, request, response);            
+        } else if(to.equals("asientos")) {
+            gotoNamedResource(ticketSitServlet, request, response);
+        } else if(to.equals("aceptacion")) {
+            gotoURL(ticketSelectionInfo, request, response);
+        } else if(to.equals("cancelado")) {
+            session.removeAttribute("datosViajeros");
+            session.removeAttribute("billetesReservados");
+            response.addCookie(new Cookie("numBilletes", ""));
+            response.addCookie(new Cookie("idServicio", ""));
+            gotoURL(frontPage, request, response);
+        } else if(to.equals("aceptado")) {
+            gotoURL(ticketCheckoutForm, request, response);
+        } else if(to.equals("pagar")) {
+            gotoNamedResource(ticketCheckoutServlet, request, response);
+        } else if(to.equals("gestion")) {
+            gotoURL(ticketOpSearch, request, response);
+        } else if(to.equals("buscarBillete")) {
+            gotoNamedResource(ticketOpSearchServlet, request, response);
+        } else if(to.equals("informacion") &&
+                session.getAttribute("billeteGestion") != null) {
+            gotoURL(ticketOpInfo, request, response);
+        } else if(to.equals("cancelacion")) {
+            gotoNamedResource(ticketOpCancelServlet, request, response);
+        } else if(to.equals("cambio")) {
+            gotoNamedResource(ticketOpChangeSelectionServlet, request, response);
+        } else if(to.equals("aplicarCambio")) {
+            gotoNamedResource(ticketOpChangeServlet, request, response);
+        } else if(to.equals("solicitudClubBus")) {
+            gotoURL(clubBusCreateForm, request, response);
+        } else if(to.equals("solicitudAplicada")) {
+            gotoURL(clubBusCreateOK, request, response);
         } else {
             gotoURL(errorForm, request, response);
         }

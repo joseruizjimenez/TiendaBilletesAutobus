@@ -203,6 +203,11 @@ public abstract class BasicUtilitiesServlet extends HttpServlet {
         String namePattern = "([0-9a-zA-Z])+";
         return isGoodLength && data.matches(namePattern);
     }
+
+    protected boolean validateDNI(string dni) {
+        String namePattern = "[0-9]+[A-Z]"
+        return dni.length() == 9 && data.matches(namePattern);
+    }
     
     /**
      * Valida que la cadena contiene solo caracteres numericos
