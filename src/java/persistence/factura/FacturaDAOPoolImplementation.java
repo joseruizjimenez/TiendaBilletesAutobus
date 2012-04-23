@@ -1,4 +1,4 @@
-package persistence.record;
+package persistence.factura;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,7 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import model.Record;
+import model.Factura;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,78 +20,66 @@ import org.apache.log4j.Logger;
  * @param recordPersistenceManager RecordDAO de pool
  * @param logger para generar las trazas
  */
-public class RecordDAOPoolImplementation implements RecordDAO {
-    private static RecordDAOPoolImplementation recordPersistenceManager = null;
+public class FacturaDAOPoolImplementation implements FacturaDAO {
+    private static FacturaDAOPoolImplementation facturaPersistenceManager = null;
     private DataSource pool;
-    private static final Logger logger = Logger.getLogger(RecordDAOPoolImplementation.class.getName());
+    private static final Logger logger = Logger.getLogger(FacturaDAOPoolImplementation.class.getName());
     
-    private RecordDAOPoolImplementation() {
+    private FacturaDAOPoolImplementation() {
     }
 
-    public static RecordDAO getRecordDAOPoolImplementation() {
-        if(recordPersistenceManager == null)
-            recordPersistenceManager = new RecordDAOPoolImplementation();
+    public static FacturaDAO getFacturaDAOPoolImplementation() {
+        if(facturaPersistenceManager == null)
+            facturaPersistenceManager = new FacturaDAOPoolImplementation();
         
-        return recordPersistenceManager;
+        return facturaPersistenceManager;
     }
 
     @Override
-    public boolean createRecord(Record record) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public boolean createFactura(Factura factura) {
+        FacturaDAO jDBCFacturaDAO = prepareForExecutingQuery();
+        if(jDBCFacturaDAO == null){
             return false;
         }
-        boolean isExecutedOK = jDBCRecordDAO.createRecord(record);
-        releaseQueryResources(jDBCRecordDAO);
+        boolean isExecutedOK = jDBCFacturaDAO.createFactura(factura);
+        releaseQueryResources(jDBCFacturaDAO);
         return isExecutedOK;
     }
 
     @Override
-    public Record readRecord(String id) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public Factura readFactura(String id) {
+        FacturaDAO jDBCFacturaDAO = prepareForExecutingQuery();
+        if(jDBCFacturaDAO == null){
             return null;
         }
-        Record record = jDBCRecordDAO.readRecord(id);
-        releaseQueryResources(jDBCRecordDAO);
-        return record;
+        Factura factura = jDBCFacturaDAO.readFactura(id);
+        releaseQueryResources(jDBCFacturaDAO);
+        return factura;
     }
 
     @Override
-    public ArrayList<Record> listRecord(String name, String artist,
-            String recordLabel, String type) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
-            return (new ArrayList<Record>());
+    public ArrayList<Factura> listFactura(String dni, String numTarjeta) {
+        FacturaDAO jDBCFacturaDAO = prepareForExecutingQuery();
+        if(jDBCFacturaDAO == null){
+            return (new ArrayList<Factura>());
         }
-        ArrayList<Record> list = jDBCRecordDAO.listRecord(name,artist,recordLabel,type);
-        releaseQueryResources(jDBCRecordDAO);
+        ArrayList<Factura> list = jDBCFacturaDAO.listFactura(dni, numTarjeta);
+        releaseQueryResources(jDBCFacturaDAO);
         return list;
     }
 
     @Override
-    public boolean updateRecord(String id, Record record) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public boolean deleteFactura(String id) {
+        FacturaDAO jDBCFacturaDAO = prepareForExecutingQuery();
+        if(jDBCFacturaDAO == null){
             return false;
         }
-        boolean isExecutedOK = jDBCRecordDAO.updateRecord(id, record);
-        releaseQueryResources(jDBCRecordDAO);
-        return isExecutedOK;
-    }
-
-    @Override
-    public boolean deleteRecord(String id) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
-            return false;
-        }
-        boolean isExecutedOK = jDBCRecordDAO.deleteRecord(id);
-        releaseQueryResources(jDBCRecordDAO);
+        boolean isExecutedOK = jDBCFacturaDAO.deleteFactura(id);
+        releaseQueryResources(jDBCFacturaDAO);
         return isExecutedOK;
     }
     
-    @Override
+    /*@Override
     public Map<UUID,Record> getRecordMap() {
         RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
         if(jDBCRecordDAO == null){
@@ -100,7 +88,7 @@ public class RecordDAOPoolImplementation implements RecordDAO {
         HashMap<UUID,Record> recordMap = (HashMap<UUID,Record>) jDBCRecordDAO.getRecordMap();
         releaseQueryResources(jDBCRecordDAO);
         return recordMap;
-    }
+    }*/
 
     @Override
     public boolean setUp(String url, String driver, String user, String password) {
@@ -128,8 +116,8 @@ public class RecordDAOPoolImplementation implements RecordDAO {
      * Las consultas individuales se hace creando un RecordDAOJDBCImplementation
      * @return RecordDAO
      */
-    private RecordDAO prepareForExecutingQuery() {
-        RecordDAOJDBCImplementation jDBCpersistenceManager = new RecordDAOJDBCImplementation();
+    private FacturaDAO prepareForExecutingQuery() {
+        FacturaDAOJDBCImplementation jDBCpersistenceManager = new FacturaDAOJDBCImplementation();
         Connection connection;
         try {
             connection = pool.getConnection();
@@ -141,7 +129,7 @@ public class RecordDAOPoolImplementation implements RecordDAO {
         return jDBCpersistenceManager;
     }
 
-    private void releaseQueryResources(RecordDAO  recordDAO) {
+    private void releaseQueryResources(FacturaDAO  recordDAO) {
         recordDAO.disconnect();
     }
 

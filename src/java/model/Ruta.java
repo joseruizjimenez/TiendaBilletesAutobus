@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -48,7 +50,7 @@ public class Ruta implements Serializable {
      * @param type tipo de musica
      * @param price precio del disco
      */
-    public Ruta(String origen, String destino, ArrayString<String> paradas){
+    public Ruta(String origen, String destino, ArrayList<String> paradas){
         this();
         this.origen = origen;
         this.destino = destino;
@@ -66,12 +68,13 @@ public class Ruta implements Serializable {
      * @param type tipo de musica
      * @param price precio del disco
      */
-    public Ruta(String id, String origen, String destino,
-            ArrayString<String> paradas){
+    public Ruta(String id, String origen, String destino, String footprint){
         this(id);
         this.origen = origen;
         this.destino = destino;
-        this.paradas = paradas;        
+        this.paradas = new ArrayList<String>();
+        String[] paradasArray = footprint.split(";");
+        this.paradas.addAll(Arrays.asList(paradasArray));       
     }
     
     @Override
@@ -100,6 +103,66 @@ public class Ruta implements Serializable {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    /**
+     * @return the origen
+     */
+    public String getOrigen() {
+        return origen;
+    }
+
+    /**
+     * @param origen the origen to set
+     */
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    /**
+     * @return the destino
+     */
+    public String getDestino() {
+        return destino;
+    }
+
+    /**
+     * @param destino the destino to set
+     */
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    /**
+     * @return the paradas
+     */
+    public ArrayList<String> getParadas() {
+        return paradas;
+    }
+    
+    public String getParadasAsString() {
+        StringBuilder footprintBuilder = new StringBuilder("");
+        if(!this.paradas.isEmpty()) {
+            for(int i=0; i < paradas.size(); i++) {
+                footprintBuilder.append(paradas.get(i));
+                footprintBuilder.append(",");
+                
+            }
+        }
+        return footprintBuilder.toString();
+    }
+
+    /**
+     * @param paradas the paradas to set
+     */
+    public void setParadas(ArrayList<String> paradas) {
+        this.paradas = paradas;
+    }
+    
+    public void setParadasFromString(String footprint) {
+        this.paradas = new ArrayList<String>();
+        String[] paradasArray = footprint.split(";");
+        this.paradas.addAll(Arrays.asList(paradasArray));
     }
 
 }

@@ -70,7 +70,7 @@ public class BilleteVendido implements Serializable {
      * @param type tipo de musica
      * @param price precio del disco
      */
-    public BilleteVendido(Servicio servicio, Factura factura, String localizador,
+    public BilleteVendido(String id, Servicio servicio, Factura factura, String localizador,
             String nombreViajero, String dniViajero){
         this(id);
         this.servicio = servicio;
@@ -106,6 +106,76 @@ public class BilleteVendido implements Serializable {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    /**
+     * @return the servicio
+     */
+    public Servicio getServicio() {
+        return servicio;
+    }
+
+    /**
+     * @param servicio the servicio to set
+     */
+    public void setServicio(Servicio servicio) {
+        this.servicio = servicio;
+    }
+
+    /**
+     * @return the factura
+     */
+    public Factura getFactura() {
+        return factura;
+    }
+
+    /**
+     * @param factura the factura to set
+     */
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+
+    /**
+     * @return the localizador
+     */
+    public String getLocalizador() {
+        return localizador;
+    }
+
+    /**
+     * @param localizador the localizador to set
+     */
+    public void setLocalizador(String localizador) {
+        this.localizador = localizador;
+    }
+
+    /**
+     * @return the nombreViajero
+     */
+    public String getNombreViajero() {
+        return nombreViajero;
+    }
+
+    /**
+     * @param nombreViajero the nombreViajero to set
+     */
+    public void setNombreViajero(String nombreViajero) {
+        this.nombreViajero = nombreViajero;
+    }
+
+    /**
+     * @return the dniViajero
+     */
+    public String getDniViajero() {
+        return dniViajero;
+    }
+
+    /**
+     * @param dniViajero the dniViajero to set
+     */
+    public void setDniViajero(String dniViajero) {
+        this.dniViajero = dniViajero;
     }
 
 }

@@ -22,9 +22,9 @@ import java.util.UUID;
 public class Servicio implements Serializable {
     private UUID id = null;
     private Ruta ruta = null;
-    private Autobus autobus = null;
-    private int totalPlazas = null;
-    private int plazasOcupadas = null;
+    //private Autobus autobus = null;
+    private int totalPlazas = 0;
+    private int plazasOcupadas = 0;
     private String claseServicio = null;
     private String horaSalida = null;
     private String horaLlegada = null;
@@ -53,12 +53,11 @@ public class Servicio implements Serializable {
      * @param type tipo de musica
      * @param price precio del disco
      */
-    public Servicio(Ruta ruta, Autobus autobus, int totalPlazas, int plazasOcupadas,
+    public Servicio(Ruta ruta, boolean isServicioSupra, int totalPlazas, int plazasOcupadas,
             String claseServicio, String horaSalida, String horaLlegada,
             String diasSemana, BigDecimal precio){
         this();
         this.ruta = ruta;
-        this.autobus = autobus;
         this.totalPlazas = totalPlazas;
         this.plazasOcupadas = plazasOcupadas;
         this.claseServicio = claseServicio;
@@ -79,12 +78,11 @@ public class Servicio implements Serializable {
      * @param type tipo de musica
      * @param price precio del disco
      */
-    public Servicio(String id, Ruta ruta, Autobus autobus, int totalPlazas,
+    public Servicio(String id, Ruta ruta, boolean isServicioSupra, int totalPlazas,
             int plazasOcupadas, String claseServicio, String horaSalida,
             String horaLlegada, String diasSemana, BigDecimal precio){
         this(id);
         this.ruta = ruta;
-        this.autobus = autobus;
         this.totalPlazas = totalPlazas;
         this.plazasOcupadas = plazasOcupadas;
         this.claseServicio = claseServicio;
@@ -146,6 +144,104 @@ public class Servicio implements Serializable {
     
     public void setPrecio(String precio) {
         this.precio = new BigDecimal(precio);
+    }
+
+    /**
+     * @return the ruta
+     */
+    public Ruta getRuta() {
+        return ruta;
+    }
+
+    /**
+     * @param ruta the ruta to set
+     */
+    public void setRuta(Ruta ruta) {
+        this.ruta = ruta;
+    }
+
+    /**
+     * @return the totalPlazas
+     */
+    public int getTotalPlazas() {
+        return totalPlazas;
+    }
+
+    /**
+     * @param totalPlazas the totalPlazas to set
+     */
+    public void setTotalPlazas(int totalPlazas) {
+        this.totalPlazas = totalPlazas;
+    }
+
+    /**
+     * @return the plazasOcupadas
+     */
+    public int getPlazasOcupadas() {
+        return plazasOcupadas;
+    }
+
+    /**
+     * @param plazasOcupadas the plazasOcupadas to set
+     */
+    public void setPlazasOcupadas(int plazasOcupadas) {
+        this.plazasOcupadas = plazasOcupadas;
+    }
+
+    /**
+     * @return the claseServicio
+     */
+    public String getClaseServicio() {
+        return claseServicio;
+    }
+
+    /**
+     * @param claseServicio the claseServicio to set
+     */
+    public void setClaseServicio(String claseServicio) {
+        this.claseServicio = claseServicio;
+    }
+
+    /**
+     * @return the horaSalida
+     */
+    public String getHoraSalida() {
+        return horaSalida;
+    }
+
+    /**
+     * @param horaSalida the horaSalida to set
+     */
+    public void setHoraSalida(String horaSalida) {
+        this.horaSalida = horaSalida;
+    }
+
+    /**
+     * @return the horaLlegada
+     */
+    public String getHoraLlegada() {
+        return horaLlegada;
+    }
+
+    /**
+     * @param horaLlegada the horaLlegada to set
+     */
+    public void setHoraLlegada(String horaLlegada) {
+        this.horaLlegada = horaLlegada;
+    }
+
+    /**
+     * @return the diasSemana
+     */
+    public String getDiasSemana() {
+        return diasSemana;
+    }
+
+    /**
+     * @param diasSemana the diasSemana to set
+     */
+    public void setDiasSemana(String diasSemana) {
+        this.diasSemana = diasSemana;
     }
 
 }

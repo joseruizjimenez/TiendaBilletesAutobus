@@ -1,28 +1,28 @@
-package persistence.record;
+package persistence.ruta;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-import model.Record;
+import model.Ruta;
 
 /**
  * Esta interfaz define un patron de persistencia DAO para los discos
  */
-public interface RecordDAO {
+public interface RutaDAO {
     
     /**
      * Inserta un disco en el sistema de persistencia
      * @param record disco a insertar
      * @return true si hay exito, false en caso contrario
      */
-    public boolean createRecord(Record record);
+    public boolean createRuta(Ruta ruta);
     
     /**
      * Lee un disco del sistema de persistencia
      * @param id string identificando el disco a leer
      * @return disco solicitado
      */
-    public Record readRecord(String id);
+    public Ruta readRuta(String id);
     
     /**
      * Lista los discos que cumplen las caracteristicas solicitadas.
@@ -33,29 +33,21 @@ public interface RecordDAO {
      * @param type tipo musical del disco
      * @return ArrayList de Records. Vacio si no se encontraron coincidencias
      */
-    public ArrayList<Record> listRecord(String name, String artist, String recordLabel,
-            String type);
-    
-    /**
-     * Actualiza la informacion de un disco dado un id
-     * @param id del disco a actualizar
-     * @param record nueva informacion del disco
-     * @return true si hay exito, false en caso contrario
-     */
-    public boolean updateRecord(String id, Record record);
+    public ArrayList<Ruta> listRuta(String origen, String destino);
     
     /**
      * Borra un disco del sistema de persistencia
      * @param id del disco a borrar
      * @return true si hay exito, false en caso contrario
      */
-    public boolean deleteRecord(String id);
+    public boolean deleteRuta(String id);
     
     /**
      * Para facilitar la carga del catalogo
      * @return recordMap mapa con todos los discos
-     */
+     *
     public Map<UUID,Record> getRecordMap();
+    */
     
     /**
      * Metodo para crear la conexion con el sistema de persistencia.

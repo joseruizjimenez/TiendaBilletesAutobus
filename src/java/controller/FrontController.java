@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,7 +37,7 @@ public class FrontController extends BasicUtilitiesServlet {
                 gotoURL(ticketSearchForm, request, response);
             } else {
                 gotoNamedResource(ticketSearchServlet, request, response);
-            }            
+            }
         } else if(to.equals("seleccion")) {
             gotoNamedResource(ticketSelectionServlet, request, response);            
         } else if(to.equals("asientos")) {

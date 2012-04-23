@@ -183,9 +183,9 @@ public abstract class BasicUtilitiesServlet extends HttpServlet {
         return isGoodLength && data.matches(namePattern);
     }
 
-    protected boolean validateDNI(string dni) {
-        String namePattern = "[0-9]+[A-Z]"
-        return dni.length() == 9 && data.matches(namePattern);
+    protected boolean validateDNI(String dni) {
+        String namePattern = "[0-9]+[A-Z]";
+        return dni.length() == 9 && dni.matches(namePattern);
     }
     
     /**

@@ -4,22 +4,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
-import model.Catalog;
+import model.Servicio;
 import org.apache.log4j.Logger;
-import persistence.comment.CommentDAO;
-import persistence.comment.CommentPersistFactory;
-import persistence.record.RecordDAO;
-import persistence.record.RecordPersistFactory;
-import persistence.sale.SaleDAO;
-import persistence.sale.SalePersistFactory;
-import persistence.stock.StockDAO;
-import persistence.stock.StockPersistFactory;
-import persistence.user.UserDAO;
-import persistence.user.UserPersistFactory;
+import persistence.factura.FacturaDAO;
+import persistence.factura.FacturaPersistFactory;
+import persistence.billeteVendido.BilleteVendidoDAO;
+import persistence.billeteVendido.BilleteVendidoPersistFactory;
+import persistence.ruta.RutaDAO;
+import persistence.ruta.RutaPersistFactory;
+import persistence.servicio.ServicioDAO;
+import persistence.servicio.ServicioPersistFactory;
 
 /**
  * Listener encargado de establecer la conexion con el sistema de persistencia,
@@ -32,11 +31,10 @@ import persistence.user.UserPersistFactory;
  */
 @WebListener
 public class StartUpListener implements ServletContextListener {
-    private CommentDAO commentDAO;
-    private RecordDAO recordDAO;
-    private SaleDAO saleDAO;
-    private StockDAO stockDAO;
-    private UserDAO userDAO;
+    private BilleteVendidoDAO billeteVendidoDAO;
+    private FacturaDAO facturaDAO;
+    private RutaDAO rutaDAO;
+    private ServicioDAO servicioDAO;
 
     @Override
     public void contextInitialized(ServletContextEvent evt) {
@@ -64,52 +62,42 @@ public class StartUpListener implements ServletContextListener {
         
         Logger.getLogger(StartUpListener.class.getName()).info( 
                 "Estableciendo conexion con la BD empleando: "+persistenceMechanism+"...");
-        commentDAO = CommentPersistFactory.getCommentDAO(persistenceMechanism);
-        recordDAO = RecordPersistFactory.getRecordDAO(persistenceMechanism);
-        saleDAO = SalePersistFactory.getSaleDAO(persistenceMechanism);
-        stockDAO = StockPersistFactory.getStockDAO(persistenceMechanism);
-        userDAO = UserPersistFactory.getUserDAO(persistenceMechanism);
-        boolean connected = commentDAO.setUp(url, driver, user, password) &&
-                            recordDAO.setUp(url, driver, user, password) &&
-                            saleDAO.setUp(url, driver, user, password) &&
-                            stockDAO.setUp(url, driver, user, password) &&
-                            userDAO.setUp(url, driver, user, password);
+        billeteVendidoDAO = BilleteVendidoPersistFactory.getBilleteVendidoDAO(persistenceMechanism);
+        facturaDAO = FacturaPersistFactory.getFacturaDAO(persistenceMechanism);
+        rutaDAO = RutaPersistFactory.getRutaDAO(persistenceMechanism);
+        servicioDAO = ServicioPersistFactory.getServicioDAO(persistenceMechanism);
+        boolean connected = billeteVendidoDAO.setUp(url, driver, user, password) &&
+                            facturaDAO.setUp(url, driver, user, password) &&
+                            rutaDAO.setUp(url, driver, user, password) &&
+                            servicioDAO.setUp(url, driver, user, password);
         if (!connected) {
             Logger.getLogger(StartUpListener.class.getName()).error( 
                 "Error conectando a la BD");
             context.setAttribute("persistenceMechanism", "none");
-            context.setAttribute("catalog", "none");
+            context.setAttribute("servicios", "none");
+            context.setAttribute("estaciones", "none");
         } else {
             Logger.getLogger(StartUpListener.class.getName()).info( 
                 "Conexion con la BD realizada con exito");
-            Catalog catalog = new Catalog();
-            if( catalog.setUp(persistenceMechanism) ) {
+            HashMap<UUID, Servicio> servicios = (HashMap) servicioDAO.getServicioMap();
+            if( servicios != null ) {
                 Logger.getLogger(StartUpListener.class.getName()).info( 
-                    "Catalogo de la aplicacion cargado con exito");
-                context.setAttribute("catalog", catalog);
+                    "Catalogo de servicios cargado con exito");
+                context.setAttribute("servicios", servicios);
             } else {
                 Logger.getLogger(StartUpListener.class.getName()).error( 
-                    "Error cargando los datos en el Catalogo");
-                context.setAttribute("catalog", "none");
+                    "Error cargando los servicios");
+                context.setAttribute("servicios", "none");
             }
-        }
-        if( loadCategoriesToContext(context) ) {
-            Logger.getLogger(StartUpListener.class.getName()).info(
-                "Cargadas las categorias del menu");
-        } else {
-            Logger.getLogger(StartUpListener.class.getName()).warn(
-                "Error cargando las categorias del menu");
         }
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent evt) {
-        boolean ok = commentDAO.disconnect() &&
-                     recordDAO.disconnect() &&
-                     saleDAO.disconnect() &&
-                     stockDAO.disconnect() &&
-                     userDAO.disconnect();
-                     //adminDAO.disconnect();
+        boolean ok = billeteVendidoDAO.disconnect() &&
+                     facturaDAO.disconnect() &&
+                     rutaDAO.disconnect() &&
+                     servicioDAO.disconnect();
         if (!ok) {
             Logger.getLogger(StartUpListener.class.getName()).error(
                     "No se encontro el driver para la base de datos");
@@ -118,19 +106,5 @@ public class StartUpListener implements ServletContextListener {
                 "Cerrada correctamente la conexion con la base de datos");
         }
     }
-
-    private boolean loadCategoriesToContext(ServletContext context) {
-        String categories = context.getInitParameter("categories");
-        if(categories != null) {
-            HashMap<String,String> categoriesMap = new HashMap<String,String>();
-            String[] pairs = categories.split(",");
-            for(int i=0;i<pairs.length;i++) {
-                String[] par = pairs[i].split("=");
-                categoriesMap.put(par[0],par[1]);
-            }
-            context.setAttribute("categories",categoriesMap);
-            return true;
-        }
-        return false;
-    }
+    
 }

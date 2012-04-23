@@ -2,9 +2,15 @@ package model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Producto de la tienda: Servicio
@@ -186,6 +192,159 @@ public class Factura implements Serializable {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+    
+    public void setTotal(String total) {
+        /*NumberFormat n = NumberFormat.getCurrencyInstance(Locale.FRANCE);
+        double doublePrice = 0.0;
+        try {
+            doublePrice = n.parse(total).doubleValue();
+        } catch (ParseException ex) {
+            //Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.total = BigDecimal.valueOf(doublePrice);*/
+        //this.total = BigDecimal.valueOf(Double.valueOf(total));
+        this.total = new BigDecimal(total);
+    }
+
+    /**
+     * @return the CIF
+     */
+    public String getCIF() {
+        return CIF;
+    }
+
+    /**
+     * @param CIF the CIF to set
+     */
+    public void setCIF(String CIF) {
+        this.CIF = CIF;
+    }
+
+    /**
+     * @return the nombreComprador
+     */
+    public String getNombreComprador() {
+        return nombreComprador;
+    }
+
+    /**
+     * @param nombreComprador the nombreComprador to set
+     */
+    public void setNombreComprador(String nombreComprador) {
+        this.nombreComprador = nombreComprador;
+    }
+
+    /**
+     * @return the DNI
+     */
+    public String getDNI() {
+        return DNI;
+    }
+
+    /**
+     * @param DNI the DNI to set
+     */
+    public void setDNI(String DNI) {
+        this.DNI = DNI;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the mvl
+     */
+    public String getMvl() {
+        return mvl;
+    }
+
+    /**
+     * @param mvl the mvl to set
+     */
+    public void setMvl(String mvl) {
+        this.mvl = mvl;
+    }
+
+    /**
+     * @return the numTarjeta
+     */
+    public String getNumTarjeta() {
+        return numTarjeta;
+    }
+
+    /**
+     * @param numTarjeta the numTarjeta to set
+     */
+    public void setNumTarjeta(String numTarjeta) {
+        this.numTarjeta = numTarjeta;
+    }
+
+    /**
+     * @return the calle
+     */
+    public String getCalle() {
+        return calle;
+    }
+
+    /**
+     * @param calle the calle to set
+     */
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    /**
+     * @return the poblacion
+     */
+    public String getPoblacion() {
+        return poblacion;
+    }
+
+    /**
+     * @param poblacion the poblacion to set
+     */
+    public void setPoblacion(String poblacion) {
+        this.poblacion = poblacion;
+    }
+
+    /**
+     * @return the provincia
+     */
+    public String getProvincia() {
+        return provincia;
+    }
+
+    /**
+     * @param provincia the provincia to set
+     */
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    /**
+     * @return the codPostal
+     */
+    public String getCodPostal() {
+        return codPostal;
+    }
+
+    /**
+     * @param codPostal the codPostal to set
+     */
+    public void setCodPostal(String codPostal) {
+        this.codPostal = codPostal;
     }
 
 }

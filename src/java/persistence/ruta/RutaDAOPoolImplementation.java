@@ -1,4 +1,4 @@
-package persistence.record;
+package persistence.ruta;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,7 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import model.Record;
+import model.Ruta;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,78 +20,66 @@ import org.apache.log4j.Logger;
  * @param recordPersistenceManager RecordDAO de pool
  * @param logger para generar las trazas
  */
-public class RecordDAOPoolImplementation implements RecordDAO {
-    private static RecordDAOPoolImplementation recordPersistenceManager = null;
+public class RutaDAOPoolImplementation implements RutaDAO {
+    private static RutaDAOPoolImplementation rutaPersistenceManager = null;
     private DataSource pool;
-    private static final Logger logger = Logger.getLogger(RecordDAOPoolImplementation.class.getName());
+    private static final Logger logger = Logger.getLogger(RutaDAOPoolImplementation.class.getName());
     
-    private RecordDAOPoolImplementation() {
+    private RutaDAOPoolImplementation() {
     }
 
-    public static RecordDAO getRecordDAOPoolImplementation() {
-        if(recordPersistenceManager == null)
-            recordPersistenceManager = new RecordDAOPoolImplementation();
+    public static RutaDAO getRutaDAOPoolImplementation() {
+        if(rutaPersistenceManager == null)
+            rutaPersistenceManager = new RutaDAOPoolImplementation();
         
-        return recordPersistenceManager;
+        return rutaPersistenceManager;
     }
 
     @Override
-    public boolean createRecord(Record record) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public boolean createRuta(Ruta ruta) {
+        RutaDAO jDBCRutaDAO = prepareForExecutingQuery();
+        if(jDBCRutaDAO == null){
             return false;
         }
-        boolean isExecutedOK = jDBCRecordDAO.createRecord(record);
-        releaseQueryResources(jDBCRecordDAO);
+        boolean isExecutedOK = jDBCRutaDAO.createRuta(ruta);
+        releaseQueryResources(jDBCRutaDAO);
         return isExecutedOK;
     }
 
     @Override
-    public Record readRecord(String id) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public Ruta readRuta(String id) {
+        RutaDAO jDBCRutaDAO = prepareForExecutingQuery();
+        if(jDBCRutaDAO == null){
             return null;
         }
-        Record record = jDBCRecordDAO.readRecord(id);
-        releaseQueryResources(jDBCRecordDAO);
-        return record;
+        Ruta ruta = jDBCRutaDAO.readRuta(id);
+        releaseQueryResources(jDBCRutaDAO);
+        return ruta;
     }
 
     @Override
-    public ArrayList<Record> listRecord(String name, String artist,
-            String recordLabel, String type) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
-            return (new ArrayList<Record>());
+    public ArrayList<Ruta> listRuta(String origen, String destino) {
+        RutaDAO jDBCRutaDAO = prepareForExecutingQuery();
+        if(jDBCRutaDAO == null){
+            return (new ArrayList<Ruta>());
         }
-        ArrayList<Record> list = jDBCRecordDAO.listRecord(name,artist,recordLabel,type);
-        releaseQueryResources(jDBCRecordDAO);
+        ArrayList<Ruta> list = jDBCRutaDAO.listRuta(origen, destino);
+        releaseQueryResources(jDBCRutaDAO);
         return list;
     }
 
     @Override
-    public boolean updateRecord(String id, Record record) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
+    public boolean deleteRuta(String id) {
+        RutaDAO jDBCRutaDAO = prepareForExecutingQuery();
+        if(jDBCRutaDAO == null){
             return false;
         }
-        boolean isExecutedOK = jDBCRecordDAO.updateRecord(id, record);
-        releaseQueryResources(jDBCRecordDAO);
-        return isExecutedOK;
-    }
-
-    @Override
-    public boolean deleteRecord(String id) {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
-            return false;
-        }
-        boolean isExecutedOK = jDBCRecordDAO.deleteRecord(id);
-        releaseQueryResources(jDBCRecordDAO);
+        boolean isExecutedOK = jDBCRutaDAO.deleteRuta(id);
+        releaseQueryResources(jDBCRutaDAO);
         return isExecutedOK;
     }
     
-    @Override
+   /* @Override
     public Map<UUID,Record> getRecordMap() {
         RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
         if(jDBCRecordDAO == null){
@@ -100,7 +88,7 @@ public class RecordDAOPoolImplementation implements RecordDAO {
         HashMap<UUID,Record> recordMap = (HashMap<UUID,Record>) jDBCRecordDAO.getRecordMap();
         releaseQueryResources(jDBCRecordDAO);
         return recordMap;
-    }
+    }*/
 
     @Override
     public boolean setUp(String url, String driver, String user, String password) {
@@ -128,8 +116,8 @@ public class RecordDAOPoolImplementation implements RecordDAO {
      * Las consultas individuales se hace creando un RecordDAOJDBCImplementation
      * @return RecordDAO
      */
-    private RecordDAO prepareForExecutingQuery() {
-        RecordDAOJDBCImplementation jDBCpersistenceManager = new RecordDAOJDBCImplementation();
+    private RutaDAO prepareForExecutingQuery() {
+        RutaDAOJDBCImplementation jDBCpersistenceManager = new RutaDAOJDBCImplementation();
         Connection connection;
         try {
             connection = pool.getConnection();
@@ -141,8 +129,8 @@ public class RecordDAOPoolImplementation implements RecordDAO {
         return jDBCpersistenceManager;
     }
 
-    private void releaseQueryResources(RecordDAO  recordDAO) {
-        recordDAO.disconnect();
+    private void releaseQueryResources(RutaDAO  rutaDAO) {
+        rutaDAO.disconnect();
     }
 
 }
