@@ -1,11 +1,8 @@
 package model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.UUID;
 
 /**

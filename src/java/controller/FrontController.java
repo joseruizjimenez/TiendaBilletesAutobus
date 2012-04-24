@@ -48,7 +48,8 @@ public class FrontController extends BasicUtilitiesServlet {
             session.removeAttribute("datosViajeros");
             session.removeAttribute("billetesReservados");
             response.addCookie(new Cookie("numBilletes", ""));
-            response.addCookie(new Cookie("idServicio", ""));
+            response.addCookie(new Cookie("idServicioIda", ""));
+            response.addCookie(new Cookie("idServicioVuelta", ""));
             gotoURL(frontPage, request, response);
         } else if(to.equals("aceptado")) {
             gotoURL(ticketCheckoutForm, request, response);
