@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
  *     - idServiciosIda (atributo del request): IDs de los servicios encontrados
  *     - idServiciosVuelta (atributo del request): IDs de los servicios encontrados
  *          Será null si no se ha solicitado vuelta.
+ *     - msg si no se ha rellenado ningun campo
  */
 @WebServlet(name="TicketSearchServlet")
 public class TicketSearchServlet extends BasicUtilitiesServlet {

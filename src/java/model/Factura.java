@@ -67,8 +67,7 @@ public class Factura implements Serializable {
      */
     public Factura(String CIF, String nombreComprador, String DNI, String email,
             String mvl, String numTarjeta, String calle, String poblacion,
-            String provincia, String codPostal, Calendar transactionDate,
-            BigDecimal total) {
+            String provincia, String codPostal, BigDecimal total) {
         this();
         this.CIF = CIF;
         this.nombreComprador = nombreComprador;
@@ -80,7 +79,7 @@ public class Factura implements Serializable {
         this.poblacion = poblacion;
         this.provincia = provincia;
         this.codPostal = codPostal;
-        this.transactionDate = transactionDate;
+        //this.transactionDate = transactionDate;
         this.total = total;       
     }
     

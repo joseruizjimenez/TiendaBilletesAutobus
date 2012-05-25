@@ -26,6 +26,8 @@ public class BilleteVendido implements Serializable {
     private String localizador = null;
     private String nombreViajero = null;
     private String dniViajero = null;
+    //num plaza
+    //otra info
     
     public BilleteVendido() {
         this.id = UUID.randomUUID();
@@ -135,12 +137,26 @@ public class BilleteVendido implements Serializable {
     public void setFactura(Factura factura) {
         this.factura = factura;
     }
+    
+    /**
+     * @return el numero de asiento (dos cifras)
+     */
+    public String getNumAsiento() {
+        return localizador.substring(0,2);
+    }
+    
+    /**
+     * @return campo con otra informacion del viajero y fam. numerosa
+     */
+    public String getOtraInfo() {
+        return localizador.substring(9);
+    }
 
     /**
-     * @return the localizador
+     * @return the localizador (7 chars)
      */
     public String getLocalizador() {
-        return localizador;
+        return localizador.substring(2,9);
     }
 
     /**

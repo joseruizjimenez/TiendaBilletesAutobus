@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
+import model.BilleteVendido;
 import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.factura.FacturaDAO;
@@ -79,7 +81,8 @@ public class StartUpListener implements ServletContextListener {
         } else {
             Logger.getLogger(StartUpListener.class.getName()).info( 
                 "Conexion con la BD realizada con exito");
-            HashMap<UUID, Servicio> servicios = (HashMap) servicioDAO.getServicioMap();
+            HashMap<UUID, Servicio> servicios = (HashMap<UUID,Servicio>)
+                    servicioDAO.getServicioMap();
             if( servicios != null ) {
                 Logger.getLogger(StartUpListener.class.getName()).info( 
                     "Catalogo de servicios cargado con exito");
@@ -89,6 +92,24 @@ public class StartUpListener implements ServletContextListener {
                     "Error cargando los servicios");
                 context.setAttribute("servicios", "none");
             }
+            context.setAttribute("billeteVendidoDAO", billeteVendidoDAO);
+            context.setAttribute("facturaDAO", facturaDAO);
+            context.setAttribute("rutaDAO", rutaDAO);
+            context.setAttribute("servicioDAO", servicioDAO);
+            
+            /*
+            ArrayList<BilleteVendido> billetesVendidos = (ArrayList<BilleteVendido>)
+                    billeteVendidoDAO.listBilleteVendido("", "", "");
+            if( billetesVendidos != null ) {
+                Logger.getLogger(StartUpListener.class.getName()).info( 
+                    "Billetes vendidos cargados con exito");
+                context.setAttribute("billetesVendidos", billetesVendidos);
+            } else {
+                Logger.getLogger(StartUpListener.class.getName()).error( 
+                    "Error cargando los billetesVendidos");
+                context.setAttribute("billetesVendidos", "none");
+            }
+            */
         }
     }
 

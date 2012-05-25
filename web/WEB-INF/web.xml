@@ -43,7 +43,7 @@
     </context-param>    
     <context-param>
         <param-name>persistenceMechanism</param-name>
-        <param-value>pool</param-value>
+        <param-value>jdbc</param-value>
     </context-param>
     <!--Si falla el persistenceConfigFile se emplea esta configuracion:
         Configuracion de la base de datos jdbc:mysql://localhost:3306/tiendaonline-->
@@ -187,6 +187,10 @@
         <param-value>TicketSelectionServlet</param-value>
     </context-param>
     <context-param>
+        <param-name>ticketSelectionFormServlet</param-name>
+        <param-value>TicketSelectionFormServlet</param-value>
+    </context-param>
+    <context-param>
         <param-name>ticketSitServlet</param-name>
         <param-value>TicketSitServlet</param-value>
     </context-param>
@@ -197,6 +201,10 @@
     <context-param>
         <param-name>ticketOpSearchServlet</param-name>
         <param-value>TicketOpSearchServlet</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ticketOpSearchListServlet</param-name>
+        <param-value>TicketOpSearchList</param-value>
     </context-param>
     <context-param>
         <param-name>ticketOpCancelServlet</param-name>
@@ -225,6 +233,10 @@
         <servlet-class>controller.public.TicketSelectionServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>TicketSelectionFormServlet</servlet-name>
+        <servlet-class>controller.private.TicketSelectionFormServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>TicketSitServlet</servlet-name>
         <servlet-class>controller.private.TicketSitServlet</servlet-class>
     </servlet>
@@ -235,6 +247,10 @@
     <servlet>
         <servlet-name>TicketOpSearchServlet</servlet-name>
         <servlet-class>controller.private.TicketOpSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketOpSearchList</servlet-name>
+        <servlet-class>controller.private.TicketOpSearchList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpCancelServlet</servlet-name>

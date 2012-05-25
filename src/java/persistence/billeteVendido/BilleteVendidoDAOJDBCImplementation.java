@@ -23,7 +23,8 @@ public class BilleteVendidoDAOJDBCImplementation implements BilleteVendidoDAO{
     private final Object lockOfConnection = new Object();
     private Connection connection = null;
     private static BilleteVendidoDAOJDBCImplementation billeteVendidoPersistenceManager = null;
-    private static final Logger logger = Logger.getLogger(BilleteVendidoDAOJDBCImplementation.class.getName());
+    private static final Logger logger = 
+            Logger.getLogger(BilleteVendidoDAOJDBCImplementation.class.getName());
     
     //Visibilidad de paquete para usarlo con BilleteVendidoDAOPoolImplementation
     BilleteVendidoDAOJDBCImplementation() {

@@ -56,9 +56,11 @@ public abstract class BasicUtilitiesServlet extends HttpServlet {
     protected String frontController = null;
     protected String ticketSearchServlet = null;
     protected String ticketSelectionServlet = null;
+    protected String ticketSelectionFormServlet = null;
     protected String ticketSitServlet = null;
     protected String ticketCheckoutServlet = null;
     protected String ticketOpSearchServlet = null;
+    protected String ticketOpSearchListServlet = null;
     protected String ticketOpCancelServlet = null;
     protected String ticketOpChangeSelectionServlet = null;
     protected String ticketOpChangeServlet = null;
@@ -132,9 +134,11 @@ public abstract class BasicUtilitiesServlet extends HttpServlet {
         frontController = context.getInitParameter("frontController");
         ticketSearchServlet = context.getInitParameter("ticketSearchServlet");
         ticketSelectionServlet = context.getInitParameter("ticketSelectionServlet");
+        ticketSelectionFormServlet = context.getInitParameter("ticketSelectionFormServlet");
         ticketSitServlet = context.getInitParameter("ticketSitServlet");
         ticketCheckoutServlet = context.getInitParameter("ticketCheckoutServlet");
         ticketOpSearchServlet = context.getInitParameter("ticketOpSearchServlet");
+        ticketOpSearchListServlet = context.getInitParameter("ticketOpSearchListServlet");
         ticketOpCancelServlet = context.getInitParameter("ticketOpCancelServlet");
         ticketOpChangeSelectionServlet = context.getInitParameter("ticketOpChangeSelectionServlet");
         ticketOpChangeServlet = context.getInitParameter("ticketOpChangeServlet");
