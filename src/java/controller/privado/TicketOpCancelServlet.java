@@ -14,7 +14,7 @@ import model.BilleteVendido;
 import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.billeteVendido.BilleteVendidoDAO;
-import persistence.factura.FacturaDAO;
+import persistence.ruta.RutaDAO;
 import persistence.servicio.ServicioDAO;
 
 /**
@@ -39,7 +39,6 @@ public class TicketOpCancelServlet extends BasicUtilitiesServlet {
         ServletContext context = session.getServletContext();
         BilleteVendidoDAO billeteVendidoDAO =
                 (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
-        FacturaDAO facturaDAO = (FacturaDAO) context.getAttribute("facturaDAO");
         ServicioDAO servicioDAO = (ServicioDAO) context.getAttribute("servicioDAO");
         HashMap<UUID, Servicio> servicios = (HashMap<UUID, Servicio>)
                 context.getAttribute("servicios");
@@ -48,12 +47,14 @@ public class TicketOpCancelServlet extends BasicUtilitiesServlet {
         UUID servicioId = UUID.fromString(billete.getServicio().getIdAsString());
         Servicio servicioActualizado = servicios.get(servicioId);
         servicioActualizado.setPlazasOcupadas(servicioActualizado.getPlazasOcupadas()-1);
+        RutaDAO rutaDAO = (RutaDAO) context.getAttribute("rutaDAO");
+        servicioActualizado.setRuta(rutaDAO.readRuta(
+                servicioActualizado.getRuta().getIdAsString()));
         servicios.put(servicioId, servicioActualizado);
         context.setAttribute("servicios", servicios);
         servicioDAO.deleteServicio(servicioId.toString());
         servicioDAO.createServicio(servicioActualizado);
         servicios.put(servicioId, servicioActualizado);
-        //facturaDAO.deleteFactura(billete.getFactura().getIdAsString());
         billeteVendidoDAO.deleteBilleteVendido(billete.getIdAsString());
         
         gotoURL(ticketOpCancelOK, request, response);

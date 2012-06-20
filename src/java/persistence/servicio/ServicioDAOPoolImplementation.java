@@ -14,10 +14,10 @@ import model.Servicio;
 import org.apache.log4j.Logger;
 
 /**
- * Implementacion de RecordDAO para persistir la informacion con un pool de conexiones
+ * Implementacion de ServicioDAO para persistir la informacion con un pool de conexiones
  * 
  * @param DataSource el pool de conexiones
- * @param recordPersistenceManager RecordDAO de pool
+ * @param ServicioPersistenceManager ServicioDAO de pool
  * @param logger para generar las trazas
  */
 public class ServicioDAOPoolImplementation implements ServicioDAO {
@@ -113,8 +113,8 @@ public class ServicioDAOPoolImplementation implements ServicioDAO {
     }
     
     /**
-     * Las consultas individuales se hace creando un RecordDAOJDBCImplementation
-     * @return RecordDAO
+     * Las consultas individuales se hace creando un ServicioDAOJDBCImplementation
+     * @return ServicioDAO
      */
     private ServicioDAO prepareForExecutingQuery() {
         ServicioDAOJDBCImplementation jDBCpersistenceManager = new ServicioDAOJDBCImplementation();

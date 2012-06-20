@@ -27,6 +27,7 @@ import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.billeteVendido.BilleteVendidoDAO;
 import persistence.factura.FacturaDAO;
+import persistence.ruta.RutaDAO;
 import persistence.servicio.ServicioDAO;
 
 /**
@@ -62,18 +63,20 @@ public class TicketOpChangeServlet extends BasicUtilitiesServlet {
         UUID servicioId = UUID.fromString(billete.getServicio().getIdAsString());
         Servicio servicioActualizado = servicios.get(servicioId);
         servicioActualizado.setPlazasOcupadas(servicioActualizado.getPlazasOcupadas()-1);
+        RutaDAO rutaDAO = (RutaDAO) context.getAttribute("rutaDAO");
+        servicioActualizado.setRuta(rutaDAO.readRuta(
+                servicioActualizado.getRuta().getIdAsString()));
         servicios.put(servicioId, servicioActualizado);
         context.setAttribute("servicios", servicios);
         servicioDAO.deleteServicio(servicioId.toString());
         servicioDAO.createServicio(servicioActualizado);
         servicios.put(servicioId, servicioActualizado);
-        //facturaDAO.deleteFactura(billete.getFactura().getIdAsString());
         billeteVendidoDAO.deleteBilleteVendido(billete.getIdAsString());
         
         
         // COMPRA
         ArrayList<BilleteVendido> billetesReservados =
-                (ArrayList<BilleteVendido>) context.getAttribute("billetesRerservados");
+                (ArrayList<BilleteVendido>) session.getAttribute("billetesReservados");
         if(billetesReservados == null || billetesReservados.isEmpty()) {
             gotoURL(frontPage, request, response);
         } else {
@@ -100,6 +103,8 @@ public class TicketOpChangeServlet extends BasicUtilitiesServlet {
             Servicio servicioNuevoActualizado = servicioDAO.readServicio(servicioNuevoId);
             servicioNuevoActualizado.setPlazasOcupadas(
                     servicioNuevoActualizado.getPlazasOcupadas() + 1);
+            servicioNuevoActualizado.setRuta(rutaDAO.readRuta(
+                servicioNuevoActualizado.getRuta().getIdAsString()));
             servicioDAO.deleteServicio(servicioNuevoId);
             servicioDAO.createServicio(servicioNuevoActualizado);
             servicios.put(UUID.fromString(servicioNuevoId), servicioNuevoActualizado);
@@ -160,15 +165,15 @@ public class TicketOpChangeServlet extends BasicUtilitiesServlet {
                         emailConfig.getProperty("password"));
                 transport.sendMessage(mail, mail.getAllRecipients());
                 transport.close();
-                request.setAttribute("info", "El email con la factura ha sido enviado");
+                request.setAttribute("msg", "El email con la factura ha sido enviado");
             } catch (IOException ex) {
-                request.setAttribute("info", "Error enviando el email");
+                request.setAttribute("msg", "Error enviando el email");
                 logger.error("Error cargando los parametros del fichero de email", ex);
             } catch (AddressException ex) {
-                request.setAttribute("info", "Error enviando el email");
+                request.setAttribute("msg", "Error enviando el email");
                 logger.warn("Error enviando email", ex);
             } catch (MessagingException ex) {
-                request.setAttribute("info", "Error enviando el email");
+                request.setAttribute("msg", "Error enviando el email");
                 logger.warn("Error enviando email", ex);
             } finally {
                 gotoURL(ticketOpChangeOK, request, response);

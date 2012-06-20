@@ -1,8 +1,16 @@
 package controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.BilleteVendido;
+import model.Factura;
+import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.billeteVendido.BilleteVendidoDAO;
+import persistence.factura.FacturaDAO;
+import persistence.ruta.RutaDAO;
+import persistence.servicio.ServicioDAO;
 
 /**
  * Servlet Controlador que recibe todas las peticiones destinadas a un Servlet
@@ -52,7 +65,6 @@ public class FrontController extends BasicUtilitiesServlet {
         } else if(to.equals("aceptacion")) {
             gotoURL(ticketSelectionInfo, request, response);
         } else if(to.equals("cancelado")) {
-            //session.removeAttribute("datosViajeros");
             session.removeAttribute("billetesReservados");
             session.removeAttribute("billeteGestion");
             response.addCookie(new Cookie("numBilletes", ""));
@@ -70,29 +82,37 @@ public class FrontController extends BasicUtilitiesServlet {
         } else if(to.equals("buscarBilleteList")) {
             String idBilleteGestion = request.getParameter("idBilleteGestion");
             BilleteVendidoDAO billeteVendidoDAO =
-                (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
-            session.setAttribute("billeteGestion", billeteVendidoDAO.
-                    readBilleteVendido(idBilleteGestion));
-            gotoNamedResource(ticketOpSearchListServlet, request, response);
+                    (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
+            FacturaDAO facturaDAO = (FacturaDAO) context.getAttribute("facturaDAO");
+            ServicioDAO servicioDAO = (ServicioDAO) context.getAttribute("servicioDAO");
+            RutaDAO rutaDAO = (RutaDAO) context.getAttribute("rutaDAO");
+            BilleteVendido billeteGestion = billeteVendidoDAO.
+                    readBilleteVendido(idBilleteGestion);
+            Servicio servicioGestion = servicioDAO.readServicio(
+                    billeteGestion.getServicio().getIdAsString());
+            servicioGestion.setRuta(rutaDAO.readRuta(
+                servicioGestion.getRuta().getIdAsString()));
+            billeteGestion.setServicio(servicioGestion);
+            billeteGestion.setFactura(facturaDAO.readFactura(
+                    billeteGestion.getFactura().getIdAsString()));
+            session.setAttribute("billeteGestion", billeteGestion);
+            gotoURL(ticketOpMenu, request, response);
         } else if(to.equals("informacion") &&
                 session.getAttribute("billeteGestion") != null) {
             gotoURL(ticketOpInfo, request, response);
+        } else if(to.equals("emailFactura") &&
+                session.getAttribute("billeteGestion") != null) {
+            BilleteVendido billeteG = (BilleteVendido) session.getAttribute("billeteGestion");
+            enviarEmailFactura(billeteG.getFactura(), request, response);
+        } else if(to.equals("cancelMenu") &&
+                session.getAttribute("billeteGestion") != null) {
+            gotoURL(ticketOpCancel, request, response);
         } else if(to.equals("cancelacion") &&
                 session.getAttribute("billeteGestion") != null) {
             gotoNamedResource(ticketOpCancelServlet, request, response);
         } else if(to.equals("cambioCheck") &&
                 session.getAttribute("billeteGestion") != null) {
-            ArrayList<BilleteVendido> billetesReservados =
-                    (ArrayList<BilleteVendido>) context.getAttribute("billetesRerservados");
-            if (billetesReservados == null || billetesReservados.isEmpty()) {
-                gotoURL(ticketSearchForm, request, response);
-            } else {
-                gotoURL(ticketSearchForm, request, response);
-                //gotoNamedResource(ticketOpChangeServlet, request, response);
-            }
-        /*} else if(to.equals("cambio") &&
-                session.getAttribute("billeteGestion") != null) {
-            gotoNamedResource(ticketOpChangeSelectionServlet, request, response);*/
+            gotoURL(ticketSearchForm, request, response);
         } else if(to.equals("aplicarCambio")) {
             gotoNamedResource(ticketOpChangeServlet, request, response);
         } else if(to.equals("solicitudClubBus")) {
@@ -101,6 +121,76 @@ public class FrontController extends BasicUtilitiesServlet {
             gotoURL(clubBusCreateOK, request, response);
         } else {
             gotoURL(errorForm, request, response);
+        }
+    }
+
+    private void enviarEmailFactura(Factura factura, HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        ServletContext context = session.getServletContext();
+        StringBuilder bill = new StringBuilder("");
+        bill.append("Factura de compra: ");
+        bill.append(factura.getIdAsString());
+        bill.append("\n");
+        bill.append("Nombre: ");
+        bill.append(factura.getNombreComprador());
+        bill.append("\n");
+        bill.append("DNI: ");
+        bill.append(factura.getDNI());
+        bill.append("\n");
+        bill.append("CIF: ");
+        bill.append(factura.getCIF());
+        bill.append("\n");
+        bill.append("Numero de Tarjeta: ");
+        bill.append(factura.getNumTarjeta());
+        bill.append("\n");
+        bill.append("Numero movil: ");
+        bill.append(factura.getMvl());
+        bill.append("\n");
+        bill.append("Calle: ");
+        bill.append(factura.getCalle());
+        bill.append("\n");
+        bill.append("Poblacion: ");
+        bill.append(factura.getPoblacion());
+        bill.append("\n");
+        bill.append("Provincia: ");
+        bill.append(factura.getProvincia());
+        bill.append("\n");
+        bill.append("Cod. Postal: ");
+        bill.append(factura.getCodPostal());
+        bill.append("\n\n");
+        bill.append("Total Pago: ");
+        bill.append(factura.getTotalAsFormattedString());
+        InputStream is = context.getResourceAsStream(emailConfigFile);
+        Properties emailConfig = new Properties();
+        try {
+            emailConfig.load(is);
+            Session mailSession = Session.getDefaultInstance(emailConfig);
+            mailSession.setDebug(true);
+            Message mail = new MimeMessage(mailSession);
+            mail.setSentDate(new java.util.Date(System.currentTimeMillis()));
+            mail.addHeader("Content-Type", "text/html");
+            mail.setFrom(new InternetAddress(emailConfig.getProperty("mail.smtp.user")));
+            mail.setRecipient(Message.RecipientType.TO,
+                    new InternetAddress(factura.getEmail()));
+
+            mail.setSubject("Factura de compra de I Love Bus");
+            mail.setText("Ha realizado con exito su compra, esta es su factura:\n" + bill);
+
+            Transport transport = mailSession.getTransport("smtp");
+            transport.connect(emailConfig.getProperty("mail.smtp.user"),
+                    emailConfig.getProperty("password"));
+            transport.sendMessage(mail, mail.getAllRecipients());
+            transport.close();
+            request.setAttribute("msg", "El email con la factura ha sido enviado");
+        } catch (IOException ex) {
+            request.setAttribute("msg", "Error enviando el email");
+        } catch (AddressException ex) {
+            request.setAttribute("msg", "Error enviando el email");
+        } catch (MessagingException ex) {
+            request.setAttribute("msg", "Error enviando el email");
+        } finally {
+            gotoURL(ticketOpMenu, request, response);
         }
     }
 }

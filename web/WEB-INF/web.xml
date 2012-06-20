@@ -64,13 +64,6 @@
         <param-value>passlpi</param-value>
     </context-param>
     
-    <!--Listado de categorias del panel lateral izquierdo de la web
-        Seran presentadas como enlaces de busqueda a esa categoria: Categoria=type>
-    <context-param>
-        <param-name>categories</param-name>
-        <param-value>Rock=rock,POP=pop,Jazz=jazz,R &amp; B=rb,Clasica=classic,Folk=folk,Chill-Out=chillout,Electronica=electronica,Avant-Garde=avantgarde</param-value>
-    </context-param-->
-    
     <!--Recursos estaticos y JSPs de la aplicacion-->
     <!--Accesibles sin credenciales-->
     <context-param>
@@ -226,43 +219,43 @@
     </servlet>
     <servlet>
         <servlet-name>TicketSearchServlet</servlet-name>
-        <servlet-class>controller.public.TicketSearchServlet</servlet-class>
+        <servlet-class>controller.publico.TicketSearchServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketSelectionServlet</servlet-name>
-        <servlet-class>controller.public.TicketSelectionServlet</servlet-class>
+        <servlet-class>controller.publico.TicketSelectionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketSelectionFormServlet</servlet-name>
-        <servlet-class>controller.private.TicketSelectionFormServlet</servlet-class>
+        <servlet-class>controller.privado.TicketSelectionFormServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketSitServlet</servlet-name>
-        <servlet-class>controller.private.TicketSitServlet</servlet-class>
+        <servlet-class>controller.privado.TicketSitServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketCheckoutServlet</servlet-name>
-        <servlet-class>controller.private.TicketCheckoutServlet</servlet-class>
+        <servlet-class>controller.privado.TicketCheckoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpSearchServlet</servlet-name>
-        <servlet-class>controller.private.TicketOpSearchServlet</servlet-class>
+        <servlet-class>controller.privado.TicketOpSearchServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpSearchList</servlet-name>
-        <servlet-class>controller.private.TicketOpSearchList</servlet-class>
+        <servlet-class>controller.privado.TicketOpSearchList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpCancelServlet</servlet-name>
-        <servlet-class>controller.private.TicketOpCancelServlet</servlet-class>
+        <servlet-class>controller.privado.TicketOpCancelServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpChangeSelectionServlet</servlet-name>
-        <servlet-class>controller.private.TicketOpChangeSelectionServlet</servlet-class>
+        <servlet-class>controller.privado.TicketOpChangeSelectionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TicketOpChangeServlet</servlet-name>
-        <servlet-class>controller.private.TicketOpChangeServlet</servlet-class>
+        <servlet-class>controller.privado.TicketOpChangeServlet</servlet-class>
     </servlet>
 
     <servlet>
@@ -279,20 +272,6 @@
         <description>ServletContextListener</description>
         <listener-class>controller.StartUpListener</listener-class>
     </listener>
-    <!--listener>
-        <description>SessionListener</description>
-        <listener-class>controller.SessionListener</listener-class>
-    </listener-->
-    
-    <!--Filtros de la aplicacion>
-    <filter>
-        <filter-name>CheckCartFilter</filter-name>
-        <filter-class>controller.filter.CheckCartFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>CheckCartFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping-->
     
     <!--Recursos para errores http 404, 500 y gestion de Excepciones-->
     <error-page>

@@ -12,15 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
-import org.owasp.validator.html.AntiSamy;
-import org.owasp.validator.html.CleanResults;
-import org.owasp.validator.html.Policy;
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
+import org.owasp.validator.html.*;
 
 /**
  * Servlet que implementa una serie de metodos utiles si la clase es extendida
- * @author Jose Ruiz Jimenez
+ * 
  */
 public abstract class BasicUtilitiesServlet extends HttpServlet {
       

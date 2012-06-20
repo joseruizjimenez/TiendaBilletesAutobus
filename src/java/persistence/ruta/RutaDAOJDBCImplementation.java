@@ -10,11 +10,11 @@ import model.Ruta;
 import org.apache.log4j.Logger;
 
 /**
- * Implementacion de RecordDAO para persistir la informacion con JDBC en MySQL
+ * Implementacion de RutaDAO para persistir la informacion con JDBC en MySQL
  * 
  * @param lockOfConnection objeto para controlar los accesos no concurrentes
  * @param connection conexion con la base de datos
- * @param recordPersistenceManager RecordDAO de jdbc
+ * @param RutaPersistenceManager RutaDAO de jdbc
  * @param logger para generar las trazas
  */
 public class RutaDAOJDBCImplementation implements RutaDAO{
@@ -168,46 +168,6 @@ public class RutaDAOJDBCImplementation implements RutaDAO{
             return false;
         }
     }
-    
-    /*@Override
-    public Map<UUID,Record> getRecordMap() {
-        HashMap<UUID,Record> recordMap = new HashMap();
-        String query = "select * from RECORDS";
-        PreparedStatement statement;
-        ResultSet resultSet = null;
-        Record record = null;
-        
-        try {
-            synchronized (lockOfConnection) {
-                statement = connection.prepareStatement(query);
-            } 
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String recordId = resultSet.getString("ID");
-                record = new Record(recordId);
-                record.setName(resultSet.getString("NAME"));
-                record.setArtist(resultSet.getString("ARTIST"));
-                record.setRecordLabel(resultSet.getString("RECORDLABEL"));
-                record.setShortComment(resultSet.getString("SHORTCOMMENT"));
-                record.setFullComment(resultSet.getString("FULLCOMMENT"));
-                record.setType(resultSet.getString("TYPE"));
-                record.setPrice(resultSet.getString("PRICE"));
-                recordMap.put(UUID.fromString(recordId), record);
-            }
-        } catch (SQLException ex) {
-            logger.error("Error al recuperar un disco", ex);
-            recordMap.clear();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException ex) {
-                    logger.error("Error al cerrar la conexon a la base de datos", ex);
-                }
-            }
-        }        
-        return recordMap;
-    }*/
 
     @Override
     public boolean setUp(String url, String driver, String user, String password) {
@@ -236,7 +196,7 @@ public class RutaDAOJDBCImplementation implements RutaDAO{
     }
     
     /**
-     * Para establecer conexiones en el RecordDAOPoolImplementation mediante esta clase
+     * Para establecer conexiones en el RutaDAOPoolImplementation mediante esta clase
      * @param connection
      */
     public void setConnection(Connection connection) {

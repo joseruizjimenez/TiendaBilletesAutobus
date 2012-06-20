@@ -1,14 +1,14 @@
 package persistence.ruta;
 
 /**
- * Genera una factoria de discos siguiendo el patron DAO: RecordDAO
+ * Genera una factoria de discos siguiendo el patron DAO: RutaDAO
  */
 public class RutaPersistFactory {
     
     /**
      * Obten un sistema de persistencia del tipo declarado en persistenceMechanism
      * @param persistenceMechanism puede ser file, jdbc o pool
-     * @return RecordDAO si todo va bien, sino null
+     * @return RutaDAO si todo va bien, sino null
      */
     public static RutaDAO getRutaDAO(String persistenceMechanism){
         if(persistenceMechanism.equals("jdbc")){

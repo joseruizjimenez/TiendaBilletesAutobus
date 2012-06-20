@@ -11,17 +11,21 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Producto de la tienda: Servicio
+ * Factura de compra de billetes de autobus
  * 
- * @param id identificador del disco
- * @param name nombre del disco
- * @param artist artista del disco
- * @param recordLabel distribuidora
- * @param shortComment descripcion corta
- * @param fullComment descripcion larga
- * @param type estilo musical
- * @param price precio del disco
- * @param creationDate fecha de creacion
+ * @param id identificador de la factura
+ * @param CIF de la empresa
+ * @param nombreComprador de la tarjeta de credito
+ * @param DNI dni del dueño de la tarjeta
+ * @param email para enviar la factura
+ * @param mvl para enviar el localizador
+ * @param numTarjeta numero de la tarjeta de credito
+ * @param calle direccion de la factura
+ * @param poblacion relativo a la direccion
+ * @param provincia relativo a la direccion
+ * @param codPosta relativo a la direccion
+ * @param transactionDate fecha de la transacción
+ * @param total precio total de la compra
  */
 public class Factura implements Serializable {
     private UUID id = null;
@@ -56,14 +60,7 @@ public class Factura implements Serializable {
     }
     
     /**
-     * Constructor de un nuevo servicio
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor de una nueva factura
      */
     public Factura(String CIF, String nombreComprador, String DNI, String email,
             String mvl, String numTarjeta, String calle, String poblacion,
@@ -84,15 +81,7 @@ public class Factura implements Serializable {
     }
     
     /**
-     * Constructor para recrear discos ya existentes
-     * @param id identificador del disco original
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor para recrear facturas ya existentes
      */
     public Factura(String id, String CIF, String nombreComprador, String DNI,
             String email, String mvl, String numTarjeta, String calle,
@@ -192,15 +181,6 @@ public class Factura implements Serializable {
     }
     
     public void setTotal(String total) {
-        /*NumberFormat n = NumberFormat.getCurrencyInstance(Locale.FRANCE);
-        double doublePrice = 0.0;
-        try {
-            doublePrice = n.parse(total).doubleValue();
-        } catch (ParseException ex) {
-            //Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.total = BigDecimal.valueOf(doublePrice);*/
-        //this.total = BigDecimal.valueOf(Double.valueOf(total));
         this.total = new BigDecimal(total);
     }
 

@@ -1,10 +1,6 @@
 package persistence.servicio;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +10,11 @@ import model.Servicio;
 import org.apache.log4j.Logger;
 
 /**
- * Implementacion de RecordDAO para persistir la informacion con JDBC en MySQL
+ * Implementacion de ServicioDAO para persistir la informacion con JDBC en MySQL
  * 
  * @param lockOfConnection objeto para controlar los accesos no concurrentes
  * @param connection conexion con la base de datos
- * @param recordPersistenceManager RecordDAO de jdbc
+ * @param ServicioPersistenceManager ServicioDAO de jdbc
  * @param logger para generar las trazas
  */
 public class ServicioDAOJDBCImplementation implements ServicioDAO{
@@ -257,7 +253,7 @@ public class ServicioDAOJDBCImplementation implements ServicioDAO{
     }
     
     /**
-     * Para establecer conexiones en el RecordDAOPoolImplementation mediante esta clase
+     * Para establecer conexiones en el ServicioDAOPoolImplementation mediante esta clase
      * @param connection
      */
     public void setConnection(Connection connection) {

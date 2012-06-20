@@ -7,16 +7,15 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import model.BilleteVendido;
 import model.Servicio;
 import org.apache.log4j.Logger;
-import persistence.factura.FacturaDAO;
-import persistence.factura.FacturaPersistFactory;
 import persistence.billeteVendido.BilleteVendidoDAO;
 import persistence.billeteVendido.BilleteVendidoPersistFactory;
+import persistence.factura.FacturaDAO;
+import persistence.factura.FacturaPersistFactory;
 import persistence.ruta.RutaDAO;
 import persistence.ruta.RutaPersistFactory;
 import persistence.servicio.ServicioDAO;
@@ -29,7 +28,6 @@ import persistence.servicio.ServicioPersistFactory;
  * cargara unos parametros por defecto directamente del web.xml
  * Ademas cargara en el contexto el catalogo de productos y las categorias del menu
  * 
- * @author Jose Ruiz Jimenez
  */
 @WebListener
 public class StartUpListener implements ServletContextListener {
@@ -86,6 +84,11 @@ public class StartUpListener implements ServletContextListener {
             if( servicios != null ) {
                 Logger.getLogger(StartUpListener.class.getName()).info( 
                     "Catalogo de servicios cargado con exito");
+                for(UUID servicioId : servicios.keySet()) {
+                    Servicio servicio = servicios.get(servicioId);
+                    servicio.setRuta(rutaDAO.readRuta(servicio.getRuta().getIdAsString()));
+                    servicios.put(servicioId, servicio);
+                }
                 context.setAttribute("servicios", servicios);
             } else {
                 Logger.getLogger(StartUpListener.class.getName()).error( 
@@ -96,20 +99,22 @@ public class StartUpListener implements ServletContextListener {
             context.setAttribute("facturaDAO", facturaDAO);
             context.setAttribute("rutaDAO", rutaDAO);
             context.setAttribute("servicioDAO", servicioDAO);
-            
-            /*
-            ArrayList<BilleteVendido> billetesVendidos = (ArrayList<BilleteVendido>)
-                    billeteVendidoDAO.listBilleteVendido("", "", "");
-            if( billetesVendidos != null ) {
-                Logger.getLogger(StartUpListener.class.getName()).info( 
-                    "Billetes vendidos cargados con exito");
-                context.setAttribute("billetesVendidos", billetesVendidos);
-            } else {
-                Logger.getLogger(StartUpListener.class.getName()).error( 
-                    "Error cargando los billetesVendidos");
-                context.setAttribute("billetesVendidos", "none");
-            }
-            */
+            ArrayList<String> estaciones = new ArrayList<String>();
+            estaciones.add("Almeria");
+            estaciones.add("Barcelona");
+            estaciones.add("Bilbao");
+            estaciones.add("Jaen");
+            estaciones.add("Leon");
+            estaciones.add("Madrid");
+            estaciones.add("Murcia");
+            estaciones.add("Nerja");
+            estaciones.add("Palencia");
+            estaciones.add("Salamanca");
+            estaciones.add("Santander");
+            estaciones.add("Sevilla");
+            estaciones.add("Valencia");
+            estaciones.add("Zamora");
+            context.setAttribute("estaciones", estaciones);
         }
     }
 

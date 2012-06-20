@@ -1,126 +1,130 @@
 <%-- 
-    Document   : userForm
-    Created on : 25-abr-2011, 21:14:55
-    Author     : JOSE RUIZ JIMENEZ
+    Document   : index
+    Created on : 19-mar-2012, 19:25:56
+    Author     : USUARIO
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.UUID"%>
+<%@page import="model.Servicio"%>
+<%@page import="model.Factura"%>
+<%@page import="model.BilleteVendido"%>
+<%@page import="model.Ruta"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" title="standar" type="text/css" href="/TiendaOnline/style.css">
-        <title>Tienda Online</title>
-    </head>
-    <body>
-        <jsp:useBean id="cart" scope="session" class="model.Cart" />
-        <jsp:useBean id="user" scope="session" class="model.User" />
-        <jsp:useBean id="authenticated" scope="session" class="java.lang.String" />
-        <jsp:useBean id="loginError" scope="request" class="java.lang.String" />
-        <jsp:useBean id="categories" scope="application" class="java.util.HashMap" />
-        <jsp:useBean id="registerError" scope="request" class="java.lang.String" />
-        
-        <div id="header">
-            <a href="/TiendaOnline/" class="float"><img src="cssimages/logo.jpg" alt="" width="171" height="73" /></a>																																																		<div class="inner_copy"><a href="http://www.greatdirectories.org/">web directories</a><a href="http://www.bestfreetemplates.info/">free CSS templates</a></div>
-            <div class="topblock1">
-                Moneda:<br /><select><option>EUR €</option></select>
-            </div>
-	    <div class="topblock2">
-                Idioma:<br />
-		<a href="#"><img src="cssimages/flag1.gif" alt="" width="19" height="11" /></a>																																		
-		<a href="#"><img src="cssimages/flag2.gif" alt="" width="19" height="11" /></a>
-		<a href="#"><img src="cssimages/flag3.gif" alt="" width="19" height="11" /></a>
-		<a href="#"><img src="cssimages/flag4.gif" alt="" width="19" height="11" /></a>
-		<a href="#"><img src="cssimages/flag5.gif" alt="" width="19" height="11" /></a>
-		<a href="#"><img src="cssimages/flag6.gif" alt="" width="19" height="11" /></a>
-            </div>
-            <div class="topblock2">
-                <a href="/TiendaOnline/go?to=shoppingcart"><img src="cssimages/shopping.gif" alt="" width="24" height="24" class="shopping" /></a>																																																																									<div class="inner_copy"><a href="http://www.bestfreetemplates.org/">free templates</a><a href="http://www.bannermoz.com/">banner templates</a></div>
-                <p>Carro de compra</p>
-                <p><strong><%if(cart == null) {%>0<%}else{ %><jsp:getProperty name="cart" property="numberOfItems" /><%} %></strong><span> articulos</span></p>
-            </div>
-            <ul id="menu">
-                <li><img src="cssimages/li.gif" alt="" width="19" height="29" /></li>
-		<li><a href="/TiendaOnline/"><img src="cssimages/but1_a.gif" alt="" width="90" height="29" /></a></li>
-		<li><a href="/TiendaOnline/go?to=new"><img src="cssimages/but2.gif" alt="" width="129" height="29" /></a></li>
-		<li><a href="/TiendaOnline/go?to=featured"><img src="cssimages/but3.gif" alt="" width="127" height="29" /></a></li>
-		<li><a href="/TiendaOnline/go?to=user"><img src="cssimages/but4.gif" alt="" width="113" height="29" /></a></li>
-		<li><a href="/TiendaOnline/go?to=search"><img src="cssimages/but5.gif" alt="" width="105" height="29" /></a></li>
-                <li><a href="/TiendaOnline/go?to=shoppingcart"><img src="cssimages/but6.gif" alt="" width="132" height="29" /></a></li>
-		<li><a href="#"><img src="cssimages/but7.gif" alt="" width="82" height="29" /></a></li>
-		<li><a href="#"><img src="cssimages/but8.gif" alt="" width="112" height="29" /></a></li>
-		<li><a href="/TiendaOnline/go?to=admin"><img src="cssimages/but9.gif" alt="" width="71" height="29" /></a></li>
-            </ul>
-	</div>
-	
-	<div id="container">
-            <div id="center" class="column">
-                <div id="content">
-                    <div id="about">
-                        <p class="tree"><b>Inserte sus datos para crear la cuenta:</b></p><br/>                  
-                    <form method="post" action="/TiendaOnline/go">
-                        <input name="to" value="register" type="hidden"><pre>
-                        <p class="line"><span>Nick:             </span><input name="nick" value="" type="text" /></p>
-                        <p class="line"><span>Password:        </span> <input name="pass1" value="" type="password" /></p>
-                        <p class="line"><span>Repita password: </span> <input name="pass2" value="" type="password" /></p>
-                        <p class="line"><span>Nombre:          </span> <input name="firstName" value="" type="text" /></p>
-                        <p class="line"><span>Apellidos:       </span> <input name="lastName" value="" type="text" /></p>
-                        <p class="line"><span>Direccion:       </span> <input name="address" value="" type="text" /></p>
-                        <p class="line"><span>Email:           </span> <input name="email" value="" type="text" /></p>
-                        <br/><p class="line"><span>Fecha de Nacimiento:<br/></span> Dia: <select name="birthDay"><%for(int i=1;i<=31;i++){%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Mes: <select name="birthMonth"><%for(int i=1;i<=12;i++) {%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Año: <select name="birthYear">
-                                    <%for(int i=2011;i>1940;i--) {%><option><%=i%></option><%}%></select>
-                        </p></pre>
-                        <p class="liner"><button>Crear</button></p>
-                        <p class="line centerred"><%if(registerError != null && !registerError.equals("")) {%><%=registerError%><%} %></p>      
-                    </form></div>
-                 </div>
-            </div>
-            <div id="left" class="column">
-                <div class="block">
-                    <img src="cssimages/title1.gif" alt="" width="168" height="42" /><br />
-                    <ul id="navigation">
-                        <%int count = 0; 
-                          for(Object tagObject : categories.keySet()) {
-                            String tag = (String) tagObject; 
-                            if(count%2==0) {%>
-                                <li class="color"><a href="/TiendaOnline/go?to=search&type=<%=categories.get(tag)%>"><%=tag%></a></li>
-                            <%} else { %>
-                                <li><a href="/TiendaOnline/go?to=search&type=<%=categories.get(tag)%>"><%=tag%></a></li>
-                            <%}
-                            count++;
-                          }%>
-                    </ul>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script src="javascripts/1286136086-jquery.js"></script>
+<script src="javascripts/1291523190-jpaginate.js"></script>
+<script>
+            $(document).ready(function() {
+                $("#billetes").jPaginate({items:1, previous:"Anterior", next:"Siguente", cookies:false});
+            });
+</script>
+<title>I love traveling</title>
+<link href="/TiendaBilletesAutobus/style.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+    <jsp:useBean id="estaciones" scope="application" class="java.util.ArrayList" />
+    <jsp:useBean id="servicios" scope="application" class="java.util.HashMap" />
+    <jsp:useBean id="billeteGestion" scope="session" class="model.BilleteVendido" />
+    <jsp:useBean id="msg" scope="request" class="java.lang.String" />
+<div id="wrapper">
+	<div id="header-wrapper">
+    <div id="topmenu"><p>Compre y gestione billetes de autobús de forma rápida y sencilla   </p></div>
+		<div id="header">
+			<div id="logo">
+				<h1>&nbsp;</h1>
+			</div>
+			<div id="menu">
+				<ul>
+					<li><a href="/TiendaBilletesAutobus/">Homepage</a></li>
+					<li><a href="/TiendaBilletesAutobus/go?to=busqueda">comprar billete</a></li>
+					<li class="current_page_item"><a href="/TiendaBilletesAutobus/go?to=gestion">gestionar billete adquirido</a></li>
+					<li><a href="/TiendaBilletesAutobus/go?to=solicitudClubBus">solicitar tarjeta club-bus</a></li>
+                    <li><a href="#">consulta de ofertas</a></li>
+				</ul>
+			</div>
 		</div>
-		<img src="cssimages/banner1.jpg" alt="" width="172" height="200" />
-            </div>
-            <div id="right" class="column">
-                <a href="/TiendaOnline/go?to=search&type=electronica"><img src="cssimages/banner2.jpg" alt="" width="237" height="216" /></a><br />
-		<div class="rightblock">
-                    <%--<img src="cssimages/title4.gif" alt="" width="223" height="29" /><br />--%>
-                    <div class="blocks">
-                        <img src="cssimages/top_bg.gif" alt="" width="218" height="12" />
-                        <% if(authenticated != null && authenticated.equals("true")) { %>
-                            <p class="line center">Bienvenido, <jsp:getProperty name="user" property="nick" />!</p>
-                            <p class="line center"><a href="/TiendaOnline/go?to=shoppingcart" class="reg">Mi carro</a> | <a href="/TiendaOnline/go?to=user" class="reg">Mi cuenta</a> | <a href="/TiendaOnline/go?to=logout" class="reg">Logout</a></p>
-                        <%}else { %>
-                            <form method="post" action="/TiendaOnline/go">
-                                <input name="to" value="user" type="hidden">
-                                <p class="line"><span>Usuario:</span> <input name="user" value="" type="text" /></p>
-                                <p class="line"><span>Password:</span> <input name="pass" value="" type="password" /></p>
-                                <p class="line center"><a href="/TiendaOnline/go?to=register" class="reg">Registro</a> | <a href="/TiendaOnline/go?to=login" class="reg">Recordar password</a></p>
-                                <p class="line centerred"><%if(loginError != null && !loginError.equals("")) {%><%=loginError%><%} %></p>
-                                <p class="line center pad20"><button>Loguearse</button></p>
+	</div>
+	<!-- end #header -->
+	<div id="page">
+		<div id="page-bgtop">
+			<div id="page-bgbtm">
+				<div id="content">
+				  <div class="post" align="center">
+                      <h2 class="title">Cancelar billete</h2>
+                      <%if(msg != null && !msg.equals("")) {
+                          if(msg.contains("!")) {%>
+                              <p style="color: red;"><%=msg%></p>
+                          <%} else {%>
+                              <p style="color: #2EB902;"><%=msg%></p>
+                          <%}
+                      }%>
+                      <%HashMap<UUID,Servicio> serviciosC = (HashMap<UUID,Servicio>) servicios;%>
+                      <p>Seguro que desea cancelar el billete (localizador: <%=billeteGestion.getLocalizador()%>)</p></br></br>
+                      <p></p>
+                      <p>
+                      <a href="javascript:history.back()" style="color: #2EB902; font-weight: bold;">VOLVER</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a href="/TiendaBilletesAutobus/go?to=cancelacion" style="color: blue; font-weight: bold;">CANCELAR BILLETE</a>
+                      </p>
+				  </div>
+				</div>
+				<!-- end #content -->
+				<div id="sidebar">
+					<ul>
+                            <h3>Buscador de Billetes</h3>
+                            <form method="post" action="/TiendaBilletesAutobus/go">
+                                <input name="to" value="busqueda" type="hidden">
+                                <li>Origen<select name="origen">
+                                    <%ArrayList<String> estacionesString = (ArrayList<String>) estaciones;
+                                    for(String estacion : estacionesString){%>
+                                        <option><%=estacion%></option>
+                                    <%}%>
+                                </select></li>
+                                <li>Destino<select name="destino">
+                                    <%for(String estacion : estacionesString){%>
+                                        <option><%=estacion%></option>
+                                    <%}%>
+                                </select></li>
+                                <li>Ida <input type="Radio" name="modo" value="i" checked>&nbsp;&nbsp;Ida y vuelta <input type="Radio" name="modo" value="iv"></li>
+                                <li><input type="checkbox" name="sinfecha" value="sinfecha"> Consulta sin fecha</li>
+                                <li>Fecha de salida:<br/> Dia: <select name="day"><option>-</option><%for(int i=1;i<=31;i++){%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Mes: <select name="month"><option>-</option><%for(int i=1;i<=12;i++) {%><option><%=i%></option><%}%></select>&nbsp;&nbsp;A&ntildeo: <select name="year">
+                                    <option>-</option><%for(int i=2012;i<2015;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Fecha de regreso:<br/> Dia: <select name="dayVuelta"><option>-</option><%for(int i=1;i<=31;i++){%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Mes: <select name="monthVuelta"><option>-</option><%for(int i=1;i<=12;i++) {%><option><%=i%></option><%}%></select>&nbsp;&nbsp;A&ntildeo: <select name="yearVuelta">
+                                    <option>-</option><%for(int i=2012;i<2015;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Plazas<select name="numBilletes"><%for(int i=1;i<10;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Club-Bus: <input name="clubBus" value="" type="text" /></li>
+                                <li>NIF<input name="nif" value="" type="text" /></li>
+                                <span><button style="margin-left: 83px;">Buscar</button></span><%--img src="cssimages/carts.gif" alt="" width="16" height="24" class="carts" /--%>
                             </form>
-                        <%}%>
-			<img src="cssimages/bot_bg.gif" alt="" width="218" height="10" /><br />
-                    </div>
+							<%--p> formulario de compra de billete</p--%>
+				  </ul>
+							<h2>Todo ventajas</h2>
+							<ul>
+								<li><a href="#">Obten puntos por billete</a></li>
+								<li><a href="#">Nuevas ofertas cada dia</a></li>
+								<li><a href="#">Descuentos acumulables</a></li>
+								<li><a href="#">Acceso a billetes VIP</a></li>
+								<li><a href="#">No haga colas!</a></li>
+								<li><a href="#">El mejor servicio de Europa</a></li>
+							</ul>
                 </div>
-            </div>
+				<!-- end #sidebar -->
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+		</div>
 	</div>
-	
-	<div id="footer">
-            <a href="/TiendaOnline/">Home</a>  |  <a href="/TiendaOnline/go?to=new">Novedades</a>  |  <a href="/TiendaOnline/go?to=featured">Destacados</a>  |  <a href="/TiendaOnline/go?to=user">Mi Cuenta</a>  |  <a href="/TiendaOnline/go?to=shoppingcart">Carrito de Compra</a>  |  <a href="/TiendaOnline/go?to=admin" class="terms">Admin</a>
-            <p>Ejemplo javaEE por Jose Ruiz Jimenez. Template diseñado por: <a href="http://www.bestfreetemplates.info" target="_blank" id="bft" title="Best Free Templates">BFT</a>     </p>																																																																																																																																									<div class="inner_copy"><a href="http://www.beautifullife.info/">beautiful</a><a href="http://www.grungemagazine.com/">grunge</a></div>
-	</div>
-    </body>
+	<!-- end #page -->
+</div>
+<div id="footer">
+	<p>Copyright (c) 2012 ilovetraveling.com. All rights reserved.  <a href=""></a></p>
+</div>
+<!-- end #footer -->
+</body>
 </html>
+

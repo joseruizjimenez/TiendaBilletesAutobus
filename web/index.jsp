@@ -4,6 +4,12 @@
     Author     : USUARIO
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="model.Servicio"%>
+<%@page import="model.Factura"%>
+<%@page import="model.BilleteVendido"%>
+<%@page import="model.Ruta"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,22 +18,24 @@
 <meta name="description" content="" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>I love traveling</title>
-<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="/TiendaBilletesAutobus/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
+    <jsp:useBean id="estaciones" scope="application" class="java.util.ArrayList" />
+    <jsp:useBean id="servicios" scope="application" class="java.util.HashMap" />
 <div id="wrapper">
 	<div id="header-wrapper">
-    <div id="topmenu"><p>Compre y gestione billetes de autobús de forma rápida y sencilla </p></div>
+    <div id="topmenu"><p>Compre y gestione billetes de autobús de forma rápida y sencilla   </p></div>
 		<div id="header">
 			<div id="logo">
 				<h1>&nbsp;</h1>
 			</div>
 			<div id="menu">
 				<ul>
-					<li class="current_page_item"><a href="#">Homepage</a></li>
-					<li><a href="#">comprar billete</a></li>
-					<li><a href="#">gestionar billete</a></li>
-					<li><a href="#">solicitar tarjeta club-bus</a></li>
+					<li class="current_page_item"><a href="/TiendaBilletesAutobus/">Homepage</a></li>
+					<li><a href="/TiendaBilletesAutobus/go?to=busqueda">comprar billete</a></li>
+					<li><a href="/TiendaBilletesAutobus/go?to=gestion">gestionar billete adquirido</a></li>
+					<li><a href="/TiendaBilletesAutobus/go?to=solicitudClubBus">solicitar tarjeta club-bus</a></li>
                     <li><a href="#">consulta de ofertas</a></li>
 				</ul>
 			</div>
@@ -39,25 +47,49 @@
 			<div id="page-bgbtm">
 				<div id="content">
 				  <div class="post" align="center">
-				    <p><img src="./images/AUTOBUS.jpg" </p>
+                      <div class=bus><img src="/TiendaBilletesAutobus/img/AUTOBUS.jpg"></div>
+                      <div class=banner><a href="#"><img src="/TiendaBilletesAutobus/img/banner.PNG"></a></div>
+                      <div class=ofertas><img src="/TiendaBilletesAutobus/img/ofertas.PNG"></div>
 				  </div>
 				</div>
 				<!-- end #content -->
 				<div id="sidebar">
 					<ul>
-						<li>
-							<h3>division comprar billetes</h3>
-							<p> formulario de compra de billete</p>
-						</li>
+                            <h3>Buscador de Billetes</h3>
+                            <form method="post" action="/TiendaBilletesAutobus/go">
+                                <input name="to" value="busqueda" type="hidden">
+                                <li>Origen<select name="origen">
+                                    <%ArrayList<String> estacionesString = (ArrayList<String>) estaciones;
+                                    for(String estacion : estacionesString){%>
+                                        <option><%=estacion%></option>
+                                    <%}%>
+                                </select></li>
+                                <li>Destino<select name="destino">
+                                    <%for(String estacion : estacionesString){%>
+                                        <option><%=estacion%></option>
+                                    <%}%>
+                                </select></li>
+                                <li>Ida <input type="Radio" name="modo" value="i" checked>&nbsp;&nbsp;Ida y vuelta <input type="Radio" name="modo" value="iv"></li>
+                                <li><input type="checkbox" name="sinfecha" value="sinfecha"> Consulta sin fecha</li>
+                                <li>Fecha de salida:<br/> Dia: <select name="day"><option>-</option><%for(int i=1;i<=31;i++){%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Mes: <select name="month"><option>-</option><%for(int i=1;i<=12;i++) {%><option><%=i%></option><%}%></select>&nbsp;&nbsp;A&ntildeo: <select name="year">
+                                    <option>-</option><%for(int i=2012;i<2015;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Fecha de regreso:<br/> Dia: <select name="dayVuelta"><option>-</option><%for(int i=1;i<=31;i++){%><option><%=i%></option><%}%></select>&nbsp;&nbsp;Mes: <select name="monthVuelta"><option>-</option><%for(int i=1;i<=12;i++) {%><option><%=i%></option><%}%></select>&nbsp;&nbsp;A&ntildeo: <select name="yearVuelta">
+                                    <option>-</option><%for(int i=2012;i<2015;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Plazas<select name="numBilletes"><%for(int i=1;i<10;i++) {%><option><%=i%></option><%}%></select></li>
+                                <li>Club-Bus: <input name="clubBus" value="" type="text" /></li>
+                                <li>NIF<input name="nif" value="" type="text" /></li>
+                                <span><button style="margin-left: 83px;">Buscar</button></span><%--img src="cssimages/carts.gif" alt="" width="16" height="24" class="carts" /--%
+                            </form>
+							<%--p> formulario de compra de billete</p--%>
 				  </ul>
-							<h2>Ofertas</h2>
+							<h2>Todo ventajas</h2>
 							<ul>
-								<li><a href="#">Some link here</a></li>
-								<li><a href="#">Some link here</a></li>
-								<li><a href="#">Some link here</a></li>
-								<li><a href="#">Some link here</a></li>
-								<li><a href="#">Some link here</a></li>
-								<li><a href="#">Some link here</a></li>
+								<li><a href="#">Obten puntos por billete</a></li>
+								<li><a href="#">Nuevas ofertas cada dia</a></li>
+								<li><a href="#">Descuentos acumulables</a></li>
+								<li><a href="#">Acceso a billetes VIP</a></li>
+								<li><a href="#">No haga colas!</a></li>
+								<li><a href="#">El mejor servicio de Europa</a></li>
 							</ul>
 </div>
 				<!-- end #sidebar -->

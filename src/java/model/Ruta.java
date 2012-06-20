@@ -6,17 +6,12 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Ruta
+ * Ruta de servicio, se necesita para ofertarlos
  * 
- * @param id identificador del disco
- * @param name nombre del disco
- * @param artist artista del disco
- * @param recordLabel distribuidora
- * @param shortComment descripcion corta
- * @param fullComment descripcion larga
- * @param type estilo musical
- * @param price precio del disco
- * @param creationDate fecha de creacion
+ * @param id identificador de la ruta
+ * @param origen de la ruta
+ * @param destino de la ruta
+ * @param paradas del recorrido
  */
 public class Ruta implements Serializable {
     private UUID id = null;
@@ -38,14 +33,7 @@ public class Ruta implements Serializable {
     }
     
     /**
-     * Constructor de un nuevo servicio
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor de una nueva ruta
      */
     public Ruta(String origen, String destino, ArrayList<String> paradas){
         this();
@@ -55,15 +43,7 @@ public class Ruta implements Serializable {
     }
     
     /**
-     * Constructor para recrear discos ya existentes
-     * @param id identificador del disco original
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor para recrear rutas ya existentes
      */
     public Ruta(String id, String origen, String destino, String footprint){
         this(id);
@@ -142,8 +122,9 @@ public class Ruta implements Serializable {
         if(!this.paradas.isEmpty()) {
             for(int i=0; i < paradas.size(); i++) {
                 footprintBuilder.append(paradas.get(i));
-                footprintBuilder.append(",");
-                
+                if(i != paradas.size()-1) {
+                    footprintBuilder.append(" > ");
+                }
             }
         }
         return footprintBuilder.toString();
@@ -158,7 +139,7 @@ public class Ruta implements Serializable {
     
     public void setParadasFromString(String footprint) {
         this.paradas = new ArrayList<String>();
-        String[] paradasArray = footprint.split(";");
+        String[] paradasArray = footprint.split(" > ");
         this.paradas.addAll(Arrays.asList(paradasArray));
     }
 

@@ -3,6 +3,7 @@ package controller.privado;
 import controller.BasicUtilitiesServlet;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.BilleteVendido;
 import model.Factura;
+import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.billeteVendido.BilleteVendidoDAO;
 import persistence.factura.FacturaDAO;
@@ -26,7 +28,7 @@ import persistence.factura.FacturaDAO;
  * 
  * Espera recibir en la consulta:
  *     - localizador o numTarjeta (request)
- *     - nombre, apellidos, dni (request)
+ *     - dni (request)
  *     - fecha (request) NO SE USA
  * Devuelve:
  *     - billetesGestion (request) solo por num tarjeta y varias coincidencias
@@ -43,47 +45,60 @@ public class TicketOpSearchServlet extends BasicUtilitiesServlet {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
         String localizador = request.getParameter("localizador");
-        String nombre = request.getParameter("nombre");
-        String apellidos = request.getParameter("apellidos");
-        String nombreViajero = nombre + " " + apellidos;
         String dni = request.getParameter("dni");
+        FacturaDAO facturaDAO = (FacturaDAO) context.getAttribute("facturaDAO");
+        HashMap<UUID, Servicio> servicios =
+                        (HashMap<UUID, Servicio>) context.getAttribute("servicios");
         BilleteVendidoDAO billeteVendidoDAO =
                 (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
         if(localizador != null && !"".equals(localizador)) {
             if (validateAlphaNumeric(localizador, 7, 7)) {
-                ArrayList<BilleteVendido> billetesGestion = (ArrayList<BilleteVendido>)
-                    billeteVendidoDAO.listBilleteVendido(localizador, nombreViajero, dni);
-                if(billetesGestion.isEmpty()) {
-                    request.setAttribute("msg", "No se han encontrado coincidencias");
+                ArrayList<BilleteVendido> billetesGestionBusqueda = (ArrayList<BilleteVendido>)
+                    billeteVendidoDAO.listBilleteVendido("", "", "");
+                boolean exito = false;
+                for (BilleteVendido encontrado : billetesGestionBusqueda) {
+                    if(encontrado.getLocalizador().equalsIgnoreCase(localizador) &&
+                            encontrado.getDniViajero().equalsIgnoreCase(dni)) {
+                        encontrado.setFactura(facturaDAO.readFactura(
+                            encontrado.getFactura().getIdAsString()));
+                        encontrado.setServicio(servicios.get(encontrado.getServicio().getId()));
+                        session.setAttribute("billeteGestion", encontrado);
+                        exito = true;
+                        break;
+                    }
+                }
+                if(!exito) {
+                    request.setAttribute("msg", "No se han encontrado coincidencias!");
                     gotoURL(ticketOpSearch, request, response);
                 } else {
-                    session.setAttribute("billeteGestion", billetesGestion.get(0));
+
                     gotoURL(ticketOpMenu, request, response);
                 }
             } else {
-                request.setAttribute("msg", "Formato de localizador erroneo");
+                request.setAttribute("msg", "Formato de localizador erroneo!");
                 gotoURL(ticketOpSearch, request, response);
             }
         } else {
             String numTarjeta = request.getParameter("numTarjeta");
             if(numTarjeta != null && !"".equals(numTarjeta)) {
                 if (validateNumeric(numTarjeta, 16, 16)) {
-                    FacturaDAO facturaDAO = (FacturaDAO) context.getAttribute("facturaDAO");
                     ArrayList<Factura> facturas = facturaDAO.listFactura(dni, numTarjeta);
-                    String facturaId = "NOEXISTE";
-                    if(!facturas.isEmpty()) {
-                        facturaId = facturas.get(0).getIdAsString();
-                    }
                     ArrayList<BilleteVendido> billetesVendidos = (ArrayList<BilleteVendido>)
                             billeteVendidoDAO.listBilleteVendido("", "", "");
                     ArrayList<BilleteVendido> billetesGestion = new ArrayList<BilleteVendido>();
-                    for (BilleteVendido billete : billetesVendidos) {
-                        if (billete.getFactura().getIdAsString().equals(facturaId)) {
-                            billetesGestion.add(billete);
+                    for (Factura factura : facturas) {
+                        String facturaId = factura.getIdAsString();
+                        for(BilleteVendido billete : billetesVendidos) {
+                            if (billete.getFactura().getIdAsString().equals(facturaId)) {
+                                billete.setFactura(factura);
+                                Servicio servicio = servicios.get(billete.getServicio().getId());
+                                billete.setServicio(servicio);
+                                billetesGestion.add(billete);
+                            }
                         }
                     }
                     if (billetesGestion.isEmpty()) {
-                        request.setAttribute("msg", "No se han encontrado coincidencias");
+                        request.setAttribute("msg", "No se han encontrado coincidencias!");
                         gotoURL(ticketOpSearch, request, response);
                     } else {
                         if (billetesGestion.size() == 1) {
@@ -95,7 +110,7 @@ public class TicketOpSearchServlet extends BasicUtilitiesServlet {
                         }
                     }
                 } else {
-                    request.setAttribute("msg", "Formato del num Tarjeta erroneo");
+                    request.setAttribute("msg", "Formato del num Tarjeta erroneo!");
                     gotoURL(ticketOpSearch, request, response);
                 }
             } else {

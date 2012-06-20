@@ -1,10 +1,6 @@
 package persistence.billeteVendido;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import model.BilleteVendido;
 import model.Factura;
@@ -12,11 +8,12 @@ import model.Servicio;
 import org.apache.log4j.Logger;
 
 /**
- * Implementacion de RecordDAO para persistir la informacion con JDBC en MySQL
+ * Implementacion de BilleteVendidoDAO para persistir la informacion
+ *   con JDBC en MySQL
  * 
  * @param lockOfConnection objeto para controlar los accesos no concurrentes
  * @param connection conexion con la base de datos
- * @param recordPersistenceManager RecordDAO de jdbc
+ * @param recordPersistenceManager BilleteVendidoDAO de jdbc
  * @param logger para generar las trazas
  */
 public class BilleteVendidoDAOJDBCImplementation implements BilleteVendidoDAO{
@@ -48,7 +45,7 @@ public class BilleteVendidoDAOJDBCImplementation implements BilleteVendidoDAO{
             statement.setString(1,billeteVendido.getIdAsString());
             statement.setString(2,billeteVendido.getServicio().getIdAsString());
             statement.setString(3,billeteVendido.getFactura().getIdAsString());
-            statement.setString(4,billeteVendido.getLocalizador());
+            statement.setString(4,billeteVendido.getTotLocalizador());
             statement.setString(5,billeteVendido.getNombreViajero());
             statement.setString(6,billeteVendido.getDniViajero());
             statement.execute();
@@ -106,53 +103,59 @@ public class BilleteVendidoDAOJDBCImplementation implements BilleteVendidoDAO{
         BilleteVendido billeteVendido = null;
         int localizadorPosition=1, nombreViajeroPosition=2, dniViajeroPosition=3;
         boolean isWhereWritten = false;
-        
+              
         try {
-            if (localizador != null) {
-                query = query.concat(" where");
-                isWhereWritten = true;
-                query = query.concat(" LOCALIZADOR =?");
-            } else {
-                localizadorPosition = 0;
-                nombreViajeroPosition--;
-                dniViajeroPosition--;
-            }
-            if (nombreViajero != null) {
-                if (!isWhereWritten) {
+            if(!localizador.equals("") || !nombreViajero.equals("") || !dniViajero.equals("")) { 
+                if (localizador != null) {
                     query = query.concat(" where");
                     isWhereWritten = true;
+                    query = query.concat(" LOCALIZADOR =?");
                 } else {
-                    query = query.concat(" AND");
+                    localizadorPosition = 0;
+                    nombreViajeroPosition--;
+                    dniViajeroPosition--;
                 }
-                query = query.concat(" NOMBRE_VIAJERO =?");
-            } else {
-                nombreViajeroPosition = 0;
-                dniViajeroPosition--;
-            }
-            if (dniViajero != null) {
-                if (!isWhereWritten) {
-                    query = query.concat(" where");
-                    isWhereWritten = true;
+                if (nombreViajero != null) {
+                    if (!isWhereWritten) {
+                        query = query.concat(" where");
+                        isWhereWritten = true;
+                    } else {
+                        query = query.concat(" AND");
+                    }
+                    query = query.concat(" NOMBRE_VIAJERO =?");
                 } else {
-                    query = query.concat(" AND");
+                    nombreViajeroPosition = 0;
+                    dniViajeroPosition--;
                 }
-                query = query.concat(" DNI_VIAJERO =?");
-            } else {
-                dniViajeroPosition = 0;
-            }
+                if (dniViajero != null) {
+                    if (!isWhereWritten) {
+                        query = query.concat(" where");
+                        isWhereWritten = true;
+                    } else {
+                        query = query.concat(" AND");
+                    }
+                    query = query.concat(" DNI_VIAJERO =?");
+                } else {
+                    dniViajeroPosition = 0;
+                }
 
-            synchronized (lockOfConnection) {
-                statement = connection.prepareStatement(query);
+                synchronized (lockOfConnection) {
+                    statement = connection.prepareStatement(query);
+                }
+                if (localizadorPosition != 0) {
+                    statement.setString(localizadorPosition, localizador);
+                }
+                if (nombreViajeroPosition != 0) {
+                    statement.setString(nombreViajeroPosition, nombreViajero);
+                }
+                if (dniViajeroPosition != 0) {
+                    statement.setString(dniViajeroPosition, dniViajero);
+                }
+            } else {
+                synchronized (lockOfConnection) {
+                    statement = connection.prepareStatement(query);
+                }
             }
-            if (localizadorPosition != 0) {
-                statement.setString(localizadorPosition, localizador);
-            }
-            if (nombreViajeroPosition != 0) {
-                statement.setString(nombreViajeroPosition, nombreViajero);
-            }
-            if (dniViajeroPosition != 0) {
-                statement.setString(dniViajeroPosition, dniViajero);
-            } 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 billeteVendido = new BilleteVendido(resultSet.getString("ID"));
@@ -196,46 +199,6 @@ public class BilleteVendidoDAOJDBCImplementation implements BilleteVendidoDAO{
         }
     }
     
-    /*@Override
-    public Map<UUID,Record> getRecordMap() {
-        HashMap<UUID,Record> recordMap = new HashMap();
-        String query = "select * from RECORDS";
-        PreparedStatement statement;
-        ResultSet resultSet = null;
-        Record record = null;
-        
-        try {
-            synchronized (lockOfConnection) {
-                statement = connection.prepareStatement(query);
-            } 
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String recordId = resultSet.getString("ID");
-                record = new Record(recordId);
-                record.setName(resultSet.getString("NAME"));
-                record.setArtist(resultSet.getString("ARTIST"));
-                record.setRecordLabel(resultSet.getString("RECORDLABEL"));
-                record.setShortComment(resultSet.getString("SHORTCOMMENT"));
-                record.setFullComment(resultSet.getString("FULLCOMMENT"));
-                record.setType(resultSet.getString("TYPE"));
-                record.setPrice(resultSet.getString("PRICE"));
-                recordMap.put(UUID.fromString(recordId), record);
-            }
-        } catch (SQLException ex) {
-            logger.error("Error al recuperar un disco", ex);
-            recordMap.clear();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException ex) {
-                    logger.error("Error al cerrar la conexon a la base de datos", ex);
-                }
-            }
-        }        
-        return recordMap;
-    }*/
-
     @Override
     public boolean setUp(String url, String driver, String user, String password) {
         try {

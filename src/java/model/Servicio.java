@@ -7,22 +7,21 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Producto de la tienda: Servicio
+ * Servicio ofertado por la tienda
  * 
- * @param id identificador del disco
- * @param name nombre del disco
- * @param artist artista del disco
- * @param recordLabel distribuidora
- * @param shortComment descripcion corta
- * @param fullComment descripcion larga
- * @param type estilo musical
- * @param price precio del disco
- * @param creationDate fecha de creacion
+ * @param id identificador del servicio
+ * @param ruta asociada al servicio
+ * @param totalPlazas del autobus que efectua el servicio
+ * @param plazasOcupadas del autobus que efectua el servicio
+ * @param claseServicio normal o Supra (VIP)
+ * @param horaSalida del servicio
+ * @param horaLlegada del servicio
+ * @param diasSemana que se oferta el servicio
+ * @param precio por billete del servicio
  */
 public class Servicio implements Serializable {
     private UUID id = null;
     private Ruta ruta = null;
-    //private Autobus autobus = null;
     private int totalPlazas = 0;
     private int plazasOcupadas = 0;
     private String claseServicio = null;
@@ -45,13 +44,6 @@ public class Servicio implements Serializable {
     
     /**
      * Constructor de un nuevo servicio
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
      */
     public Servicio(Ruta ruta, boolean isServicioSupra, int totalPlazas, int plazasOcupadas,
             String claseServicio, String horaSalida, String horaLlegada,
@@ -68,15 +60,7 @@ public class Servicio implements Serializable {
     }
     
     /**
-     * Constructor para recrear discos ya existentes
-     * @param id identificador del disco original
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor para recrear servicios ya existentes
      */
     public Servicio(String id, Ruta ruta, boolean isServicioSupra, int totalPlazas,
             int plazasOcupadas, String claseServicio, String horaSalida,

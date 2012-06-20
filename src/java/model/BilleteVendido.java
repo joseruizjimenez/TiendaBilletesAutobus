@@ -1,23 +1,18 @@
 package model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Producto de la tienda: Servicio
+ * Billete Vendido, con su localizador, servicio asociado y factura
  * 
- * @param id identificador del disco
- * @param name nombre del disco
- * @param artist artista del disco
- * @param recordLabel distribuidora
- * @param shortComment descripcion corta
- * @param fullComment descripcion larga
- * @param type estilo musical
- * @param price precio del disco
- * @param creationDate fecha de creacion
+ * @param id identificador del billete vendido
+ * @param servicio asociado al billete
+ * @param factura de compra
+ * @param localizador asociado a la compra
+ * @param nombreViajero nombre del viajero
+ * @param dniViajero dni del viajero
+ * @param numPlaza numero de plaza del billete
  */
 public class BilleteVendido implements Serializable {
     private UUID id = null;
@@ -42,14 +37,7 @@ public class BilleteVendido implements Serializable {
     }
     
     /**
-     * Constructor de un nuevo servicio
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor de un nuevo billete vendido
      */
     public BilleteVendido(Servicio servicio, Factura factura, String localizador,
             String nombreViajero, String dniViajero){
@@ -62,15 +50,7 @@ public class BilleteVendido implements Serializable {
     }
     
     /**
-     * Constructor para recrear discos ya existentes
-     * @param id identificador del disco original
-     * @param name nombre del disco
-     * @param artist artista del disco
-     * @param recordLabel discografica
-     * @param shortComment comentario corto
-     * @param fullComment comentario largo
-     * @param type tipo de musica
-     * @param price precio del disco
+     * Constructor para recrear Billetes vendidos ya existentes
      */
     public BilleteVendido(String id, Servicio servicio, Factura factura, String localizador,
             String nombreViajero, String dniViajero){
@@ -151,6 +131,10 @@ public class BilleteVendido implements Serializable {
     public String getOtraInfo() {
         return localizador.substring(9);
     }
+    
+    public String getTotLocalizador() {
+        return localizador;
+    }
 
     /**
      * @return the localizador (7 chars)
@@ -193,6 +177,6 @@ public class BilleteVendido implements Serializable {
     public void setDniViajero(String dniViajero) {
         this.dniViajero = dniViajero;
     }
-
+    
 }
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,7 +55,7 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
             request.setAttribute("msg", "No se han encontrado resultados!");
         } else {
             request.setAttribute("msg", "Se han encontrado: " +
-                    idServiciosEncontradosIda.size() + " servicios:");
+                    idServiciosEncontradosIda.size() + " servicios de ida");
         }
         request.setAttribute("idServiciosIda", idServiciosEncontradosIda);
         request.setAttribute("idServiciosVuelta", idServiciosEncontradosVuelta);
@@ -72,14 +73,12 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
     
     /**
      * Genera un listado resultado de la busqueda empleando los parametros de request
-     * @param request con el formulario
-     * @return recordList generada
      */
     private ArrayList<String> generateIdaServiceIdListFromRequest(
             HttpServletRequest request) {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
-        HashMap<String,Servicio> servicios = (HashMap<String,Servicio>)
+        HashMap<UUID,Servicio> servicios = (HashMap<UUID,Servicio>)
             context.getAttribute("servicios");
         ArrayList<String> idServiciosEncontrados = new ArrayList<String>();
         String day = request.getParameter("day");
@@ -87,8 +86,10 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
         String year = request.getParameter("year");
         String origen = request.getParameter("origen");
         String destino = request.getParameter("destino");
-        for(String id : servicios.keySet()) {
-            Servicio candidato = servicios.get(id);
+        for(UUID idUUID : servicios.keySet()) {
+            String id = idUUID.toString();
+            Servicio candidato = servicios.get(idUUID);
+            
             if(candidato.getRuta().getOrigen().equalsIgnoreCase(origen)
                     && candidato.getRuta().getDestino().equalsIgnoreCase(destino)) {
                 if((day != null && !"-".equals(day)) &&
@@ -101,13 +102,13 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
                     int diaSemana = fechaSolicitada.get(Calendar.DAY_OF_WEEK);
                     String inicialDia = null;
                     switch(diaSemana) {
-                        case Calendar.SUNDAY: inicialDia = "D";
-                        case Calendar.MONDAY: inicialDia = "L";
-                        case Calendar.TUESDAY: inicialDia = "M";
-                        case Calendar.WEDNESDAY: inicialDia = "X";
-                        case Calendar.THURSDAY: inicialDia = "J";
-                        case Calendar.FRIDAY: inicialDia = "V";
-                        case Calendar.SATURDAY: inicialDia = "S";
+                        case Calendar.SUNDAY: inicialDia = "D"; break;
+                        case Calendar.MONDAY: inicialDia = "L"; break;
+                        case Calendar.TUESDAY: inicialDia = "M"; break;
+                        case Calendar.WEDNESDAY: inicialDia = "X"; break;
+                        case Calendar.THURSDAY: inicialDia = "J"; break;
+                        case Calendar.FRIDAY: inicialDia = "V"; break;
+                        case Calendar.SATURDAY: inicialDia = "S"; break;
                     }
                     if(candidato.getDiasSemana().contains(inicialDia)) {
                         idServiciosEncontrados.add(id);
@@ -116,8 +117,7 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
                     idServiciosEncontrados.add(id);
                 }
             }
-        }
-        
+        }       
         return idServiciosEncontrados;
     }
 
@@ -129,7 +129,7 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
         }        
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
-        HashMap<String,Servicio> servicios = (HashMap<String,Servicio>)
+        HashMap<UUID,Servicio> servicios = (HashMap<UUID,Servicio>)
             context.getAttribute("servicios");
         ArrayList<String> idServiciosEncontrados = new ArrayList<String>();
         String day = request.getParameter("dayVuelta");
@@ -138,8 +138,9 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
         // en la vuelta el origen es el destino y a la inversa...
         String origen = request.getParameter("destino");
         String destino = request.getParameter("origen");
-        for(String id : servicios.keySet()) {
-            Servicio candidato = servicios.get(id);
+        for(UUID idUUID : servicios.keySet()) {
+            String id = idUUID.toString();
+            Servicio candidato = servicios.get(idUUID);
             if(candidato.getRuta().getOrigen().equalsIgnoreCase(origen)
                     && candidato.getRuta().getDestino().equalsIgnoreCase(destino)) {
                 if((day != null && !"-".equals(day)) &&
@@ -152,13 +153,13 @@ public class TicketSearchServlet extends BasicUtilitiesServlet {
                     int diaSemana = fechaSolicitada.get(Calendar.DAY_OF_WEEK);
                     String inicialDia = null;
                     switch(diaSemana) {
-                        case Calendar.SUNDAY: inicialDia = "D";
-                        case Calendar.MONDAY: inicialDia = "L";
-                        case Calendar.TUESDAY: inicialDia = "M";
-                        case Calendar.WEDNESDAY: inicialDia = "X";
-                        case Calendar.THURSDAY: inicialDia = "J";
-                        case Calendar.FRIDAY: inicialDia = "V";
-                        case Calendar.SATURDAY: inicialDia = "S";
+                        case Calendar.SUNDAY: inicialDia = "D"; break;
+                        case Calendar.MONDAY: inicialDia = "L"; break;
+                        case Calendar.TUESDAY: inicialDia = "M"; break;
+                        case Calendar.WEDNESDAY: inicialDia = "X"; break;
+                        case Calendar.THURSDAY: inicialDia = "J"; break;
+                        case Calendar.FRIDAY: inicialDia = "V"; break;
+                        case Calendar.SATURDAY: inicialDia = "S"; break;
                     }
                     if(candidato.getDiasSemana().contains(inicialDia)) {
                         idServiciosEncontrados.add(id);

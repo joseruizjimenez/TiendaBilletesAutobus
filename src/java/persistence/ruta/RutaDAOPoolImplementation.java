@@ -3,9 +3,6 @@ package persistence.ruta;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -14,10 +11,10 @@ import model.Ruta;
 import org.apache.log4j.Logger;
 
 /**
- * Implementacion de RecordDAO para persistir la informacion con un pool de conexiones
+ * Implementacion de RutaDAO para persistir la informacion con un pool de conexiones
  * 
  * @param DataSource el pool de conexiones
- * @param recordPersistenceManager RecordDAO de pool
+ * @param RutaPersistenceManager RutaDAO de pool
  * @param logger para generar las trazas
  */
 public class RutaDAOPoolImplementation implements RutaDAO {
@@ -79,17 +76,6 @@ public class RutaDAOPoolImplementation implements RutaDAO {
         return isExecutedOK;
     }
     
-   /* @Override
-    public Map<UUID,Record> getRecordMap() {
-        RecordDAO jDBCRecordDAO = prepareForExecutingQuery();
-        if(jDBCRecordDAO == null){
-            return (new HashMap<UUID,Record>());
-        }
-        HashMap<UUID,Record> recordMap = (HashMap<UUID,Record>) jDBCRecordDAO.getRecordMap();
-        releaseQueryResources(jDBCRecordDAO);
-        return recordMap;
-    }*/
-
     @Override
     public boolean setUp(String url, String driver, String user, String password) {
         Context env = null;
@@ -113,8 +99,8 @@ public class RutaDAOPoolImplementation implements RutaDAO {
     }
     
     /**
-     * Las consultas individuales se hace creando un RecordDAOJDBCImplementation
-     * @return RecordDAO
+     * Las consultas individuales se hace creando un RutaDAOJDBCImplementation
+     * @return RutaDAO
      */
     private RutaDAO prepareForExecutingQuery() {
         RutaDAOJDBCImplementation jDBCpersistenceManager = new RutaDAOJDBCImplementation();

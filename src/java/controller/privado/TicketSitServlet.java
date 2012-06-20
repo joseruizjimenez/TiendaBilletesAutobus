@@ -36,15 +36,16 @@ public class TicketSitServlet extends BasicUtilitiesServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        ServletContext context = session.getServletContext();
         ArrayList<BilleteVendido> billetesReservados =
-                (ArrayList<BilleteVendido>) context.getAttribute("billetesRerservados");
+                (ArrayList<BilleteVendido>) session.getAttribute("billetesReservados");
         if(billetesReservados == null || billetesReservados.isEmpty()) {
             gotoURL(frontPage, request, response);
         } else {
             String localizador = UUID.randomUUID().toString().substring(0, 7);
             int numBillete = 1;
-            for (BilleteVendido billeteReservado : billetesReservados) {
+            ArrayList<BilleteVendido> billetesReservadosAux = new ArrayList<BilleteVendido>();
+            for (; numBillete <= billetesReservados.size();numBillete++) {
+                BilleteVendido billeteReservado = billetesReservados.get(numBillete-1);
                 String numPlaza = request.getParameter("numPlaza"
                         + Integer.toString(numBillete));
                 String familia = request.getParameter("familia"
@@ -53,20 +54,23 @@ public class TicketSitServlet extends BasicUtilitiesServlet {
                         + Integer.toString(numBillete));
                 if (numPlaza == null || "".equals(numPlaza)
                         || familia == null || "".equals(familia)) {
-                    request.setAttribute("msg", "Complete todos los campos requeridos");
+                    request.setAttribute("msg", "Complete todos los campos requeridos!");
+                    request.setAttribute("asientosReservadosIda", new ArrayList<Integer>());
+                    request.setAttribute("asientosReservadosVuelta", new ArrayList<Integer>());
                     gotoURL(ticketSitForm, request, response);
                     numBillete = -1;
                     break;
                 } else {
+                    if(numPlaza.length() == 1)
+                        numPlaza = "0" + numPlaza;
                     String unionCamposEnLocalizador = numPlaza + localizador
-                            + "Familia Numerosa: " + familia + "\n" + otros;
+                            + familia + "\n" + otros;
                     billeteReservado.setLocalizador(unionCamposEnLocalizador);
-                    billetesReservados.add(numBillete - 1, billeteReservado);
-                    numBillete++;
+                    billetesReservadosAux.add(billeteReservado);
                 }
             }
             if (numBillete != -1) {
-                session.setAttribute("billetesReservados", billetesReservados);
+                session.setAttribute("billetesReservados", billetesReservadosAux);
                 gotoURL(ticketSelectionInfo, request, response);
             }
         }

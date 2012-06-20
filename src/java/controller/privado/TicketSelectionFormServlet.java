@@ -4,6 +4,7 @@ import controller.BasicUtilitiesServlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +28,6 @@ import persistence.billeteVendido.BilleteVendidoDAO;
  *     - idServicioVuelta (cookie) opcional
  *     - numBilletes (cookie)
  *     - nombre1, apellidos1, dni1 (parametros)
- *     - nombreVuelta1, apellidosVuelta2, dniVuelta1 (parametros) opcional
  *     - lo mismo para mas billetes: nombre2, apellidos2 etc (opcional)
  * Devuelve:
  *     - billetesReservados (sesion) seran vendidos rellenando: factura y localizador
@@ -46,7 +46,7 @@ public class TicketSelectionFormServlet extends BasicUtilitiesServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
-        HashMap<String, Servicio> servicios = (HashMap<String, Servicio>)
+        HashMap<UUID, Servicio> servicios = (HashMap<UUID, Servicio>)
                 context.getAttribute("servicios");
         Cookie[] cookies = request.getCookies();
         String idServicioIda = getIdServicioIdaFromCookies(cookies);
@@ -67,47 +67,59 @@ public class TicketSelectionFormServlet extends BasicUtilitiesServlet {
                 if (nombre == null || "".equals(nombre)
                         || apellidos == null || "".equals(apellidos)
                         || dni == null || "".equals(dni)) {
-                    request.setAttribute("msg", "Complete todos los campos requeridos");
+                    request.setAttribute("numBilletes", String.valueOf(numBilletes));
+                    request.setAttribute("idServicioIda", idServicioIda);
+                    request.setAttribute("idServicioVuelta", idServicioVuelta);
+                    request.setAttribute("msg", "Complete todos los campos requeridos!");
                     numBilletes = -1; //condicion de parada del bucle
                     gotoURL(ticketSelectionForm, request, response);
                 } else if (!validateName(nombre, 2, 50)
                         || !validateName(apellidos, 1, 100)
                         || !validateDNI(dni)) {
-                    request.setAttribute("msg", "El campo contiene caracteres no permitidos");
+                    request.setAttribute("numBilletes", String.valueOf(numBilletes));
+                    request.setAttribute("idServicioIda", idServicioIda);
+                    request.setAttribute("idServicioVuelta", idServicioVuelta);
+                    request.setAttribute("msg", "El campo contiene caracteres no permitidos!");
                     numBilletes = -1; //condicion de parada del bucle
                     gotoURL(ticketSelectionForm, request, response);
                 } else {
                     BilleteVendido billeteReservadoIda = new BilleteVendido();
                     billeteReservadoIda.setServicio(servicios.get(
-                            idServicioIda));
+                            UUID.fromString(idServicioIda)));
                     billeteReservadoIda.setNombreViajero(nombre + " " + apellidos);
                     billeteReservadoIda.setDniViajero(dni);
                     billetesReservados.add(billeteReservadoIda);
 
                     //billete vuelta
                     if (idServicioVuelta != null) {
-                        String nombreVuelta = request.getParameter("nombreVuelta"
+                        String nombreVuelta = request.getParameter("nombre"
                                 + Integer.toString(i));
-                        String apellidosVuelta = request.getParameter("apellidosVuelta"
+                        String apellidosVuelta = request.getParameter("apellidos"
                                 + Integer.toString(i));
-                        String dniVuelta = request.getParameter("dniVuelta"
+                        String dniVuelta = request.getParameter("dni"
                                 + Integer.toString(i));
                         if (nombreVuelta == null || "".equals(nombreVuelta)
                                 || apellidosVuelta == null || "".equals(apellidosVuelta)
                                 || dniVuelta == null || "".equals(dniVuelta)) {
-                            request.setAttribute("msg", "Complete todos los campos requeridos");
+                            request.setAttribute("numBilletes", String.valueOf(numBilletes));
+                            request.setAttribute("idServicioIda", idServicioIda);
+                            request.setAttribute("idServicioVuelta", idServicioVuelta);
+                            request.setAttribute("msg", "Complete todos los campos requeridos!");
                             numBilletes = -1; //condicion de parada del bucle
                             gotoURL(ticketSelectionForm, request, response);
                         } else if (!validateName(nombreVuelta, 2, 50)
                                 || !validateName(apellidosVuelta, 1, 100)
                                 || !validateDNI(dniVuelta)) {
-                            request.setAttribute("msg", "El campo contiene caracteres no permitidos");
+                            request.setAttribute("numBilletes", String.valueOf(numBilletes));
+                            request.setAttribute("idServicioIda", idServicioIda);
+                            request.setAttribute("idServicioVuelta", idServicioVuelta);
+                            request.setAttribute("msg", "El campo contiene caracteres no permitidos!");
                             numBilletes = -1; //condicion de parada del bucle
                             gotoURL(ticketSelectionForm, request, response);
                         } else {
                             BilleteVendido billeteReservadoVuelta = new BilleteVendido();
                             billeteReservadoVuelta.setServicio(servicios.get(
-                                    idServicioVuelta));
+                                    UUID.fromString(idServicioVuelta)));
                             billeteReservadoVuelta.setNombreViajero(nombreVuelta
                                     + " " + apellidosVuelta);
                             billeteReservadoVuelta.setDniViajero(dniVuelta);
@@ -115,35 +127,34 @@ public class TicketSelectionFormServlet extends BasicUtilitiesServlet {
                         }
                     }
                 }
-                if(numBilletes == -1) {
-                    session.setAttribute("billetesReservados", billetesReservados);
-                    response.addCookie(new Cookie("numBilletes", ""));
-                    response.addCookie(new Cookie("idServicioIda", ""));
-                    response.addCookie(new Cookie("idServicioVuelta", ""));
-                    
-                    BilleteVendidoDAO billeteVendidoDAO =
-                            (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
-                    ArrayList<BilleteVendido> billetesVendidos = (ArrayList<BilleteVendido>)
-                            billeteVendidoDAO.listBilleteVendido("", "", "");
-                    ArrayList<Integer> asientosReservadosIda = new ArrayList<Integer>();
-                    for(BilleteVendido billete : billetesVendidos) {
-                        if (billete.getServicio().getIdAsString().equals(idServicioIda)) {
-                            asientosReservadosIda.add(Integer.valueOf(billete.getNumAsiento()));
-                        }
+            }
+            if(numBilletes != -1) {
+                session.setAttribute("billetesReservados", billetesReservados);
+                response.addCookie(new Cookie("numBilletes", ""));
+                response.addCookie(new Cookie("idServicioIda", ""));
+                response.addCookie(new Cookie("idServicioVuelta", ""));
+
+                BilleteVendidoDAO billeteVendidoDAO =
+                        (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
+                ArrayList<BilleteVendido> billetesVendidos = (ArrayList<BilleteVendido>) billeteVendidoDAO.listBilleteVendido("", "", "");
+                System.out.println(billetesVendidos.size());
+                ArrayList<Integer> asientosReservadosIda = new ArrayList<Integer>();
+                for (BilleteVendido billete : billetesVendidos) {
+                    if (billete.getServicio().getIdAsString().equals(idServicioIda)) {
+                        asientosReservadosIda.add(Integer.valueOf(billete.getNumAsiento()));
                     }
-                    request.setAttribute("asientosReservadosIda", asientosReservadosIda);
-                    if(idServicioVuelta != null) {
-                        ArrayList<Integer> asientosReservadosVuelta = new ArrayList<Integer>();
-                        for (BilleteVendido billete : billetesVendidos) {
-                            if (billete.getServicio().getIdAsString().equals(idServicioVuelta)) {
-                                asientosReservadosVuelta.add(Integer.valueOf(billete.getNumAsiento()));
-                            }
-                        }
-                        request.setAttribute("asientosReservadosVuelta", asientosReservadosVuelta);
-                    }
-                    
-                    gotoURL(ticketSitForm, request, response);
                 }
+                request.setAttribute("asientosReservadosIda", asientosReservadosIda);
+                if (idServicioVuelta != null) {
+                    ArrayList<Integer> asientosReservadosVuelta = new ArrayList<Integer>();
+                    for (BilleteVendido billete : billetesVendidos) {
+                        if (billete.getServicio().getIdAsString().equals(idServicioVuelta)) {
+                            asientosReservadosVuelta.add(Integer.valueOf(billete.getNumAsiento()));
+                        }
+                    }
+                    request.setAttribute("asientosReservadosVuelta", asientosReservadosVuelta);
+                }
+                gotoURL(ticketSitForm, request, response);
             }
         }
     }
@@ -180,7 +191,6 @@ public class TicketSelectionFormServlet extends BasicUtilitiesServlet {
         }
         return null;
     }
-   
 
 }
 

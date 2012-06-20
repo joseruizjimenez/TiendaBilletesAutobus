@@ -27,6 +27,7 @@ import model.Servicio;
 import org.apache.log4j.Logger;
 import persistence.billeteVendido.BilleteVendidoDAO;
 import persistence.factura.FacturaDAO;
+import persistence.ruta.RutaDAO;
 import persistence.servicio.ServicioDAO;
 
 /**
@@ -34,14 +35,14 @@ import persistence.servicio.ServicioDAO;
  * pago ficticio, se recopilan datos y se persiste
  * 
  * Llega de: TicketCheckoutForm.jsp
- * Va a: TicketCheckoutError.jsp y TicketChekoutOK.jsp
+ * Va a: TicketChekoutOK.jsp
  * 
  * Espera recibir en la consulta:
  *     - billetesRerservados (session) limitado a 20min
  *     - CIF, NombreComprador, DNI, email, mvl, numTarjeta, calle, poblacion,
  *     - provincia y codigoPostal (atributos)
  * Devuelve:
- *     - billetesReservados (sesion) actualizados, falta la factura
+ *     - billetesReservados (sesion) actualizado
  *     - factura (request) por si tiene que ser impresa
  *     - msg si no se ha rellenado ningun campo
  */
@@ -55,11 +56,11 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
         ArrayList<BilleteVendido> billetesReservados =
-                (ArrayList<BilleteVendido>) context.getAttribute("billetesRerservados");
+                (ArrayList<BilleteVendido>) session.getAttribute("billetesReservados");
         if(billetesReservados == null || billetesReservados.isEmpty()) {
             gotoURL(frontPage, request, response);
         } else {
-            String NIF = request.getParameter("NIF");
+            String NIF = request.getParameter("CIF");
             String nombreComprador = request.getParameter("nombreComprador");
             String DNI = request.getParameter("DNI");
             String email = request.getParameter("email");
@@ -79,7 +80,7 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
                     poblacion == null || "".equals(poblacion) ||
                     provincia == null || "".equals(provincia) ||
                     codigoPostal == null || "".equals(codigoPostal)) {
-                request.setAttribute("msg", "Complete todos los campos requeridos");
+                request.setAttribute("msg", "Complete todos los campos requeridos!");
                 gotoURL(ticketCheckoutForm, request, response);
             } else if (!validateName(nombreComprador, 2, 300) ||
                     !validateDNI(DNI) ||
@@ -90,21 +91,22 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
                     !validateName(poblacion, 0, 300) ||
                     !validateName(provincia, 0, 300) ||
                     !validateNumeric(codigoPostal, 5, 5)) {
-                request.setAttribute("msg", "El campo contiene caracteres no permitidos");
+                request.setAttribute("msg", "El campo contiene caracteres no permitidos!");
                 gotoURL(ticketCheckoutForm, request, response);
             } else {
-                BigDecimal totalFactura = new BigDecimal(0);
+                double totalFactura = 0.0;
                 for(BilleteVendido billete : billetesReservados) {
-                    totalFactura.add(billete.getServicio().getPrecio());
+                    totalFactura = totalFactura + billete.getServicio().getPrecio().doubleValue();
                 }
                 Factura factura = new Factura(NIF, nombreComprador, DNI, email,
                         mvl, numTarjeta, calle, poblacion, provincia,
-                        codigoPostal, totalFactura);
+                        codigoPostal, new BigDecimal(totalFactura));
                 
                 BilleteVendidoDAO billeteVendidoDAO =
                         (BilleteVendidoDAO) context.getAttribute("billeteVendidoDAO");
                 FacturaDAO facturaDAO = (FacturaDAO) context.getAttribute("facturaDAO");
                 ServicioDAO servicioDAO = (ServicioDAO) context.getAttribute("servicioDAO");
+                RutaDAO rutaDAO = (RutaDAO) context.getAttribute("rutaDAO");
                 HashMap<UUID, Servicio> servicios =
                         (HashMap<UUID, Servicio>) context.getAttribute("servicios");
                 facturaDAO.createFactura(factura);
@@ -116,6 +118,8 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
                     Servicio servicioActualizado = servicioDAO.readServicio(servicioId);
                     servicioActualizado.setPlazasOcupadas(
                             servicioActualizado.getPlazasOcupadas() + 1);
+                    servicioActualizado.setRuta(rutaDAO.readRuta(
+                            servicioActualizado.getRuta().getIdAsString()));
                     servicioDAO.deleteServicio(servicioId);
                     servicioDAO.createServicio(servicioActualizado);
                     servicios.put(UUID.fromString(servicioId), servicioActualizado);
@@ -140,7 +144,7 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
                 bill.append(factura.getNumTarjeta());
                 bill.append("\n");
                 bill.append("Numero movil: ");
-                bill.append(factura.getNumTarjeta());
+                bill.append(factura.getMvl());
                 bill.append("\n");
                 bill.append("Calle: ");
                 bill.append(factura.getCalle());
@@ -177,20 +181,19 @@ public class TicketCheckoutServlet extends BasicUtilitiesServlet {
                             emailConfig.getProperty("password"));
                     transport.sendMessage(mail, mail.getAllRecipients());
                     transport.close();
-                    request.setAttribute("info", "El email con la factura ha sido enviado");
+                    request.setAttribute("msg", "El email con la factura ha sido enviado");
                 } catch (IOException ex) {
-                    request.setAttribute("info", "Error enviando el email");
+                    request.setAttribute("msg", "Error enviando el email");
                     logger.error("Error cargando los parametros del fichero de email", ex);
                 } catch (AddressException ex) {
-                    request.setAttribute("info", "Error enviando el email");
+                    request.setAttribute("msg", "Error enviando el email");
                     logger.warn("Error enviando email", ex);
                 } catch (MessagingException ex) {
-                    request.setAttribute("info", "Error enviando el email");
+                    request.setAttribute("msg", "Error enviando el email");
                     logger.warn("Error enviando email", ex);
                 } finally {
                     gotoURL(ticketCheckoutOK, request, response);
-                }
-                
+                }                
             }
             
         }
